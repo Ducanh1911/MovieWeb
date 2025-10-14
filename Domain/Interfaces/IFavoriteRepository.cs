@@ -8,5 +8,7 @@ namespace MovieWebApp.Domain.Interfaces
         Task<Favorite> GetFavoriteAsync(int userId, int movieId);
         Task AddAsync(Favorite favorite);
         Task RemoveAsync(Favorite favorite);
+        Task<List<Favorite>> GetAllAsync();
+
     }
 }

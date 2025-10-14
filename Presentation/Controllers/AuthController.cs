@@ -37,6 +37,7 @@ public class AuthController : ControllerBase
             return StatusCode(500, new { message = "Lỗi máy chủ", detail = ex.Message });
         }
     } 
+
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto model)
     {
@@ -50,7 +51,6 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
-            //_logger.LogError(ex, "Lỗi khi đăng ký với email {Email}", model.Email);
             return BadRequest(new { message = ex.Message });
         }
     }
@@ -59,7 +59,10 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login([FromBody] LoginDto model)
     {
         _logger.LogInformation("Bắt đầu đăng nhập cho email: {Email}", model.Email);
-
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
         try
         {
             var response = await _authService.LoginAsync(model);
@@ -76,7 +79,6 @@ public class AuthController : ControllerBase
     [HttpPost("change-password")]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
     {
-        // Lấy userId từ token
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                           ?? User.FindFirst("userId")?.Value;
 

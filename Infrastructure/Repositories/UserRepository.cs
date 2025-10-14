@@ -30,17 +30,25 @@ namespace MovieWebApp.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public Task<List<User>> GetallAsync(User user)
+        public async Task<List<User>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.users.ToListAsync();
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var user = await _context.users.FindAsync(id);
+            if (user == null) return false;
+
+            _context.users.Remove(user);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task UpdateAsync(User user)
         {
             _context.users.Update(user);
             await _context.SaveChangesAsync();
-
-
         }
     }
 }

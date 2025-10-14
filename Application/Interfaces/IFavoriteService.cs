@@ -8,6 +8,8 @@ namespace MovieWebApp.Application.Interfaces
         Task<IEnumerable<Movie>> GetFavoritesByUserAsync(int userId);
         Task<Favorite> AddFavoriteAsync(FavoriteDto dto);
         Task<bool> RemoveFavoriteAsync(int userId, int movieId);
+        //Task<List<Favorite>> GetAllAsync();
+
 
     }
 }

@@ -12,6 +12,7 @@ namespace MovieWebApp.Application.Interfaces
         Task<bool> DeleteMovieAsync(int id);
         Task<IEnumerable<MovieDto>> SearchMoviesAsync(string keyword);
         Task<(IEnumerable<Movie> Movies, int TotalCount)> GetPagedMoviesAsync(int pageNumber, int pageSize);
+        Task<bool> IncrementViewCountAsync(int movieId);
         //Task<bool> UpdatePosterAsync(int movieId, string posterPath);
         //Task<bool> UpdateVideoUrlAsync(int movieId, string videoPath);
 

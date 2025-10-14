@@ -4,7 +4,6 @@ using MovieWebApp.Infrastructure.Data;
 using MovieWebApp.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace MovieWebApp.Infrastructure.Repositories
 {
     public class FavoriteRepository : IFavoriteRepository
@@ -41,6 +40,12 @@ namespace MovieWebApp.Infrastructure.Repositories
 
         }
 
-
+        public async Task<List<Favorite>> GetAllAsync()
+        {
+            return await _context.favorites
+               .Include(r => r.User)
+               .Include(r => r.Movie)
+               .ToListAsync();
+        }
     }
 }

@@ -8,6 +8,7 @@ namespace MovieWebApp.Domain.Interfaces
         Task<User> GetByEmailAsync(string email);
         Task AddAsync(User user);
         Task UpdateAsync(User user);
-        Task<List<User>> GetallAsync(User user);
+        Task<bool> DeleteAsync(int id);
+        Task<List<User>> GetAllAsync();
     }
 }

@@ -62,5 +62,10 @@ namespace MovieWebApp.Application.Services
             await _favoriteRepository.RemoveAsync(favorite);
             return true;
         }
+
+        public Task<List<Favorite>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

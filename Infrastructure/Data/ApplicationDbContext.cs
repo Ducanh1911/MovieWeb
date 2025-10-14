@@ -16,5 +16,7 @@ namespace MovieWebApp.Infrastructure.Data
         public DbSet<Genre> genres { get; set; }
         public DbSet<User> users { get; set; }
         public DbSet<Favorite> favorites { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
+        public DbSet<Comment> Comments { get; set; }
     }
 }

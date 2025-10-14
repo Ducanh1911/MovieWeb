@@ -85,6 +85,18 @@ namespace MovieWebApp.Application.Services
             return await _movieRepository.GetPagedAsync(pageNumber, pageSize);
         }
 
+        public async Task<bool> IncrementViewCountAsync(int movieId)
+        {
+            var movie = await _movieRepository.GetByIdAsync(movieId);
+            if (movie == null) return false;
+
+            movie.ViewCount++;
+            // Lấy danh sách genreIds hiện tại của phim
+            var genreIds = movie.Genres?.Select(g => g.GenresId).ToList() ?? new List<int>();
+            await _movieRepository.UpdateAsync(movie, genreIds);
+            return true;
+        }
+
         //public async Task<bool> UpdatePosterAsync(int movieId, string posterPath)
 
         //{

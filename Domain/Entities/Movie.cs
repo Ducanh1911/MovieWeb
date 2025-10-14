@@ -13,8 +13,16 @@ namespace MovieWebApp.Domain.Entities
         public string Language { get; set; }
         public string Poster { get; set; }
         public String VideoUrl { get; set; }
+        public string? TrailerUrl { get; set; } 
+        public string? Director { get; set; } 
+        public string? Cast { get; set; } 
+        public int? Episodes { get; set; } 
+        public double Rating { get; set; } = 0; 
+        public int ViewCount { get; set; } = 0; 
         public Nullable<System.DateTime> createdAt { get; set; } = default(Nullable<System.DateTime>);
         public virtual ICollection<Genre> Genres { get; set; }
+        public virtual ICollection<Rating> Ratings { get; set; } // Đánh giá của người dùng
+        public virtual ICollection<Comment> Comments { get; set; } // Bình luận của người dùng
         public bool IsDeleted { get; set; } = false;
     }
 }

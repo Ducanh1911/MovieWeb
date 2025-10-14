@@ -101,7 +101,8 @@ public class AuthService : IAuthService
             Expiration = DateTime.UtcNow.AddHours(1),
             UserId = user.UserId,
             Email = user.Email,
-            Role = user.Role
+            Role = user.Role,
+            Username = user.UserName
         };
     }
 

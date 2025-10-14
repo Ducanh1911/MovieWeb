@@ -38,6 +38,21 @@ namespace MovieWebApp.Presentation.Controllers
             return Ok(movie);
         }
 
+        [HttpGet("{id}/details")]
+        public async Task<IActionResult> GetMovieDetails(int id)
+        {
+            var movie = await _movieService.GetMovieByIdAsync(id);
+            if (movie == null)
+            {
+                return NotFound();
+            }
+            
+            // Tăng số lượt xem
+            await _movieService.IncrementViewCountAsync(id);
+            
+            return Ok(movie);
+        }
+
         [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<MovieDto>>> SearchMovies([FromQuery] string keyword)
         {
@@ -97,7 +112,8 @@ namespace MovieWebApp.Presentation.Controllers
             }
         }
     
-        [HttpPut]
+        [Authorize]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateMovie(int id, [FromBody] MovieDto dto)
         {
             try
@@ -115,8 +131,7 @@ namespace MovieWebApp.Presentation.Controllers
 
         }
         [Authorize(Roles = "Admin")]
-
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovie(int id)
         {
            var movie = await _movieService.DeleteMovieAsync(id);
