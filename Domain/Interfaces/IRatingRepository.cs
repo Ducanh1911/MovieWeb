@@ -15,3 +15,5 @@ namespace MovieWebApp.Domain.Interfaces
         Task<List<Rating>> GetAllAsync();
     }
 }
+
+

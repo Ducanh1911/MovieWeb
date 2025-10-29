@@ -18,18 +18,6 @@
         }
       }
     },
-    "/api/Admin/dashboard": {
-      "get": {
-        "tags": [
-          "Admin"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/Admin/users": {
       "get": {
         "tags": [
@@ -121,81 +109,6 @@
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Admin/movies": {
-      "get": {
-        "tags": [
-          "Admin"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Admin/movies/{movieId}": {
-      "put": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "movieId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateMovieDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateMovieDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateMovieDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "movieId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -698,6 +611,37 @@
         }
       }
     },
+    "/api/Genre/duplicate": {
+      "post": {
+        "tags": [
+          "Genre"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenreDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenreDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenreDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Home": {
       "get": {
         "tags": [
@@ -727,68 +671,19 @@
         ],
         "requestBody": {
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "MovieName": {
-                    "type": "string"
-                  },
-                  "Description": {
-                    "type": "string"
-                  },
-                  "ReleaseYear": {
-                    "type": "integer",
-                    "format": "int32"
-                  },
-                  "Country": {
-                    "type": "string"
-                  },
-                  "Language": {
-                    "type": "string"
-                  },
-                  "GenreIds": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer",
-                      "format": "int32"
-                    }
-                  },
-                  "Poster": {
-                    "type": "string",
-                    "format": "binary"
-                  },
-                  "Video": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
-              },
-              "encoding": {
-                "MovieName": {
-                  "style": "form"
-                },
-                "Description": {
-                  "style": "form"
-                },
-                "ReleaseYear": {
-                  "style": "form"
-                },
-                "Country": {
-                  "style": "form"
-                },
-                "Language": {
-                  "style": "form"
-                },
-                "GenreIds": {
-                  "style": "form"
-                },
-                "Poster": {
-                  "style": "form"
-                },
-                "Video": {
-                  "style": "form"
-                }
+                "$ref": "#/components/schemas/MovieUploadRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MovieUploadRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MovieUploadRequest"
               }
             }
           }
@@ -863,29 +758,6 @@
         }
       },
       "delete": {
-        "tags": [
-          "Movie"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Movie/{id}/details": {
-      "get": {
         "tags": [
           "Movie"
         ],
@@ -1214,41 +1086,6 @@
         },
         "additionalProperties": false
       },
-      "CommentDto": {
-        "type": "object",
-        "properties": {
-          "commentId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "userId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "movieId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "content": {
-            "type": "string",
-            "nullable": true
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "userName": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "CreateCommentDto": {
         "required": [
           "content",
@@ -1347,10 +1184,6 @@
         ],
         "type": "object",
         "properties": {
-          "movieId": {
-            "type": "integer",
-            "format": "int32"
-          },
           "movieName": {
             "maxLength": 100,
             "minLength": 1,
@@ -1382,34 +1215,44 @@
             "type": "string",
             "nullable": true
           },
-          "trailerUrl": {
+          "genreIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MovieUploadRequest": {
+        "required": [
+          "movieName"
+        ],
+        "type": "object",
+        "properties": {
+          "movieName": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "description": {
             "type": "string",
             "nullable": true
           },
-          "director": {
-            "type": "string",
-            "nullable": true
-          },
-          "cast": {
-            "type": "string",
-            "nullable": true
-          },
-          "episodes": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "rating": {
-            "type": "number",
-            "format": "double"
-          },
-          "viewCount": {
+          "releaseYear": {
+            "maximum": 2025,
+            "minimum": 2000,
             "type": "integer",
             "format": "int32"
           },
-          "createdAt": {
+          "country": {
             "type": "string",
-            "format": "date-time",
+            "nullable": true
+          },
+          "language": {
+            "type": "string",
             "nullable": true
           },
           "genreIds": {
@@ -1420,59 +1263,14 @@
             },
             "nullable": true
           },
-          "ratings": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RatingDto"
-            },
+          "poster": {
+            "type": "string",
+            "format": "uri",
             "nullable": true
           },
-          "comments": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CommentDto"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "RatingDto": {
-        "type": "object",
-        "properties": {
-          "ratingId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "userId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "movieId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "starRating": {
-            "maximum": 5,
-            "minimum": 1,
-            "type": "integer",
-            "format": "int32"
-          },
-          "review": {
+          "videoUrl": {
             "type": "string",
-            "nullable": true
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "userName": {
-            "type": "string",
+            "format": "uri",
             "nullable": true
           }
         },
@@ -1523,58 +1321,6 @@
             "maxLength": 1000,
             "minLength": 1,
             "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "UpdateMovieDto": {
-        "type": "object",
-        "properties": {
-          "movieName": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "releaseYear": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "country": {
-            "type": "string",
-            "nullable": true
-          },
-          "language": {
-            "type": "string",
-            "nullable": true
-          },
-          "trailerUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "director": {
-            "type": "string",
-            "nullable": true
-          },
-          "cast": {
-            "type": "string",
-            "nullable": true
-          },
-          "episodes": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "genreIds": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "nullable": true
           }
         },
         "additionalProperties": false

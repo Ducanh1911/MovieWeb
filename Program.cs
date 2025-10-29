@@ -20,11 +20,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddControllers();
 
 //Ilogger
-builder.Logging.ClearProviders();            
-builder.Logging.AddConsole();                  
-builder.Logging.AddDebug();                    
-builder.Logging.SetMinimumLevel(LogLevel.Information); 
+builder.Logging.ClearProviders();              // Xóa provider mặc định
+builder.Logging.AddConsole();                  // In ra Console
+builder.Logging.AddDebug();                    // In ra Debug Output (Visual Studio)
+builder.Logging.SetMinimumLevel(LogLevel.Information); // Mức log tối thiểu
 
+// ================= Authentication & Authorization =================
 // Đọc config Jwt từ appsettings.json
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 builder.Services.AddAuthentication(options =>
@@ -70,16 +71,18 @@ builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IGenreService, GenreService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IFavoriteService, FavoriteService>();
-builder.Services.AddScoped<IRatingService, RatingService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IRatingService, RatingService>();
 builder.Services.AddScoped<CloudinaryService>();
 
 builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
-builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<IRatingRepository, RatingRepository>();
+
+
 
 // ================= Swagger =================
 builder.Services.AddSwaggerGen(c =>

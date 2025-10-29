@@ -2,6 +2,7 @@
 using MovieWebApp.Application.Interfaces;
 using MovieWebApp.Domain.Entities;
 using MovieWebApp.Domain.Interfaces;
+ 
 
 namespace MovieWebApp.Application.Services
 {
@@ -23,26 +24,30 @@ namespace MovieWebApp.Application.Services
                 Language = dto.Language,
                 Poster = dto.Poster,
                 VideoUrl = dto.VideoUrl,
-                createdAt = dto.createdAt ?? DateTime.Now
             };
 
-            return await _movieRepository.AddAsync(movie, dto.GenreIds);
+            var created = await _movieRepository.AddAsync(movie, dto.GenreIds);
+            return created;
         } 
 
         public async Task<bool> DeleteMovieAsync(int id)
         {
-            return await _movieRepository.DeleteAsync(id);
+            var ok = await _movieRepository.DeleteAsync(id);
+            return ok;
         }
 
         public async Task<IEnumerable<Movie>> GetAllMoviesAsync()
         {   
-            return await _movieRepository.GetAsync();
-            
+
+            var movies = await _movieRepository.GetAsync();
+    
+            return movies;
         }
 
         public async Task<Movie?> GetMovieByIdAsync(int id)
         {
-            return await _movieRepository.GetByIdAsync(id);
+            var movie = await _movieRepository.GetByIdAsync(id);
+            return movie;
         }
 
         public async Task<IEnumerable<MovieDto>> SearchMoviesAsync(string keyword)
@@ -74,10 +79,10 @@ namespace MovieWebApp.Application.Services
                 Language = dto.Language,
                 Poster = dto.Poster,
                 VideoUrl = dto.VideoUrl,
-                createdAt = dto.createdAt ?? DateTime.Now
             };
 
-            return await _movieRepository.UpdateAsync(movie, dto.GenreIds);
+            var updated = await _movieRepository.UpdateAsync(movie, dto.GenreIds);
+            return updated;
         }
 
         public async Task<(IEnumerable<Movie> Movies, int TotalCount)> GetPagedMoviesAsync(int pageNumber, int pageSize)
@@ -85,16 +90,9 @@ namespace MovieWebApp.Application.Services
             return await _movieRepository.GetPagedAsync(pageNumber, pageSize);
         }
 
-        public async Task<bool> IncrementViewCountAsync(int movieId)
+        public Task<bool> IncrementViewCountAsync(int movieId)
         {
-            var movie = await _movieRepository.GetByIdAsync(movieId);
-            if (movie == null) return false;
-
-            movie.ViewCount++;
-            // Lấy danh sách genreIds hiện tại của phim
-            var genreIds = movie.Genres?.Select(g => g.GenresId).ToList() ?? new List<int>();
-            await _movieRepository.UpdateAsync(movie, genreIds);
-            return true;
+            throw new NotImplementedException();
         }
 
         //public async Task<bool> UpdatePosterAsync(int movieId, string posterPath)

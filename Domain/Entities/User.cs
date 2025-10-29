@@ -14,12 +14,9 @@ namespace MovieWebApp.Domain.Entities
         public string Email { get; set; }
 
         [Required]
-        public string PasswordHash { get; set; }  // Lưu mật khẩu dạng hash
-        [Required, MaxLength(50)]
+        public string PasswordHash { get; set; } 
         public string Role { get; set; } = "User";
-
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        //public bool IsDeleted { get; set; } = false;
 
         // Quan hệ với Favorite
         public virtual ICollection<Favorite> Favorites { get; set; }

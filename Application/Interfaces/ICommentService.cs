@@ -13,3 +13,19 @@ namespace MovieWebApp.Application.Interfaces
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

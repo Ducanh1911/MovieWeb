@@ -9,7 +9,7 @@ namespace MovieWebApp.Presentation.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")] // Chỉ Admin truy cập được
+    [Authorize(Roles = "Admin")]
     public class AdminController : ControllerBase
     {
         private readonly IMovieService _movieService;
@@ -39,51 +39,51 @@ namespace MovieWebApp.Presentation.Controllers
         }
 
         // ==================== DASHBOARD STATISTICS ====================
-        [HttpGet("dashboard")]
-        public async Task<IActionResult> GetDashboardStats()
-        {
-            try
-            {
-                var movies = await _movieService.GetAllMoviesAsync();
-                var users = await _userRepository.GetAllAsync();
-                var ratings = await _ratingRepository.GetAllAsync();
-                var comments = await _commentRepository.GetAllAsync();
-                var favorites = await _favoriteRepository.GetAllAsync();
+        //[HttpGet("dashboard")]
+        //public async Task<IActionResult> GetDashboardStats()
+        //{
+        //    try
+        //    {
+        //        var movies = await _movieService.GetAllMoviesAsync();
+        //        var users = await _userRepository.GetAllAsync();
+        //        var ratings = await _ratingRepository.GetAllAsync();
+        //        var comments = await _commentRepository.GetAllAsync();
+        //        var favorites = await _favoriteRepository.GetAllAsync();
 
-                var stats = new
-                {
-                    TotalMovies = movies.Count(),
-                    TotalUsers = users.Count(),
-                    TotalRatings = ratings.Count(),
-                    TotalComments = comments.Count(),
-                    TotalFavorites = favorites.Count(),
-                    AverageRating = movies.Any() ? movies.Average(m => m.Rating) : 0,
-                    RecentMovies = movies.OrderByDescending(m => m.createdAt).Take(5).Select(m => new
-                    {
-                        m.MovieId,
-                        m.MovieName,
-                        m.Poster,
-                        m.Rating,
-                        m.ViewCount,
-                        m.createdAt
-                    }),
-                    TopRatedMovies = movies.OrderByDescending(m => m.Rating).Take(5).Select(m => new
-                    {
-                        m.MovieId,
-                        m.MovieName,
-                        m.Poster,
-                        m.Rating,
-                        m.ViewCount
-                    })
-                };
+        //        //var stats = new
+        //        //{
+        //        //    TotalMovies = movies.Count(),
+        //        //    TotalUsers = users.Count(),
+        //        //    TotalRatings = ratings.Count(),
+        //        //    TotalComments = comments.Count(),
+        //        //    TotalFavorites = favorites.Count(),
+        //        //    AverageRating = movies.Any() ? movies.Average(m => m.Rating) : 0,
+        //        //    RecentMovies = movies.OrderByDescending(m => m.createdAt).Take(5).Select(m => new
+        //        //    {
+        //        //        m.MovieId,
+        //        //        m.MovieName,
+        //        //        m.Poster,
+        //        //        m.Rating,
+        //        //        m.ViewCount,
+        //        //        m.createdAt
+        //        //    }),
+        //        //    TopRatedMovies = movies.OrderByDescending(m => m.Rating).Take(5).Select(m => new
+        //        //    {
+        //        //        m.MovieId,
+        //        //        m.MovieName,
+        //        //        m.Poster,
+        //        //        m.Rating,
+        //        //        m.ViewCount
+        //        //    })
+        //        //};
 
-                return Ok(stats);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = "Lỗi khi lấy thống kê dashboard", error = ex.Message });
-            }
-        }
+        //        //return Ok(stats);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(new { message = "Lỗi khi lấy thống kê dashboard", error = ex.Message });
+        //    }
+        //}
 
         // ==================== USER MANAGEMENT ====================
         [HttpGet("users")]
@@ -175,88 +175,7 @@ namespace MovieWebApp.Presentation.Controllers
         }
 
         // ==================== MOVIE MANAGEMENT ====================
-        [HttpGet("movies")]
-        public async Task<IActionResult> GetAllMoviesForAdmin()
-        {
-            try
-            {
-                var movies = await _movieService.GetAllMoviesAsync();
-                var movieDtos = movies.Select(m => new
-                {
-                    m.MovieId,
-                    m.MovieName,
-                    m.Description,
-                    m.ReleaseYear,
-                    m.Country,
-                    m.Language,
-                    m.Poster,
-                    m.VideoUrl,
-                    m.TrailerUrl,
-                    m.Director,
-                    m.Cast,
-                    m.Episodes,
-                    m.Rating,
-                    m.ViewCount,
-                    m.createdAt,
-                    m.IsDeleted,
-                    Genres = m.Genres?.Select(g => new { g.GenresId, g.Name })
-                });
-
-                return Ok(movieDtos);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = "Lỗi khi lấy danh sách phim", error = ex.Message });
-            }
-        }
-
-        [HttpPut("movies/{movieId}")]
-        public async Task<IActionResult> UpdateMovie(int movieId, [FromBody] UpdateMovieDto dto)
-        {
-            try
-            {
-                var movieDto = new MovieDto
-                {
-                    MovieName = dto.MovieName ?? string.Empty,
-                    Description = dto.Description,
-                    ReleaseYear = dto.ReleaseYear ?? 0,
-                    Country = dto.Country,
-                    Language = dto.Language,
-                    TrailerUrl = dto.TrailerUrl,
-                    Director = dto.Director,
-                    Cast = dto.Cast,
-                    Episodes = dto.Episodes,
-                    GenreIds = dto.GenreIds ?? new List<int>()
-                };
-
-                var movie = await _movieService.UpdateMovieAsync(movieId, movieDto);
-                if (movie == null)
-                    return NotFound(new { message = "Không tìm thấy phim" });
-
-                return Ok(new { message = "Cập nhật phim thành công", movie });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = "Lỗi khi cập nhật phim", error = ex.Message });
-            }
-        }
-
-        [HttpDelete("movies/{movieId}")]
-        public async Task<IActionResult> DeleteMovie(int movieId)
-        {
-            try
-            {
-                var result = await _movieService.DeleteMovieAsync(movieId);
-                if (!result)
-                    return NotFound(new { message = "Không tìm thấy phim" });
-
-                return Ok(new { message = "Xóa phim thành công" });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = "Lỗi khi xóa phim", error = ex.Message });
-            }
-        }
+        // CRUD phim được cung cấp bởi MovieController. Không triển khai ở AdminController.
 
         // ==================== RATING & COMMENT MANAGEMENT ====================
         [HttpGet("ratings")]

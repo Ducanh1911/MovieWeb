@@ -87,3 +87,19 @@ GET /api/Comment/movie/1
 - User chỉ có thể sửa/xóa đánh giá và bình luận của chính mình
 - Khi tạo/cập nhật/xóa đánh giá, điểm trung bình của phim sẽ được cập nhật tự động
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MovieWebApp.Application.DTOs;
 using MovieWebApp.Domain.Entities;
 using MovieWebApp.Domain.Interfaces;
 using MovieWebApp.Infrastructure.Data;
@@ -12,7 +13,6 @@ namespace MovieWebApp.Infrastructure.Repositories
         {
             _context = context;
         }
-
         public async Task<IEnumerable<Genre>> getAsync()
         {
             var genre = await _context.genres.ToListAsync();
@@ -44,12 +44,7 @@ namespace MovieWebApp.Infrastructure.Repositories
             var genre = await _context.genres
                 .Include(g => g.Movies)
                 .FirstOrDefaultAsync(g => g.GenresId == id);
-            if (genre == null) return false;
-
-            if(genre.Movies.Any())
-            {
-                throw new InvalidOperationException("Thể loại còn sử dụng, không thể xoá!");
-            }
+            
             _context.genres.Remove(genre);
             await _context.SaveChangesAsync();
             return true;

@@ -41,6 +41,30 @@ namespace MovieWebApp.Presentation.Controllers
             return Ok(genre);
             
         }
+        //[HttpPost("add-with-builder")]
+        //public async Task<IActionResult> AddGenreWithBuilder([FromBody] string genreName)
+        //{
+        //    if (string.IsNullOrWhiteSpace(genreName))
+        //        return BadRequest("Tên thể loại không được để trống");
+        //    var genreDto = new GenreDto.Builder()
+        //                        .SetName(genreName)
+        //                        .Build();
+
+        //    var genre = await _genreService.CreateGenreAsync(genreDto);
+
+        //    return Ok(genre);
+        //}
+        [HttpPost("duplicate")]
+        public IActionResult DuplicateGenre([FromBody] GenreDto genreDto)
+        {
+            var clone = (GenreDto)genreDto.Clone();
+            clone.Name += " - Clone";
+
+            return Ok(clone);
+        }
+
+
+
         //[Authorize]
 
         [HttpDelete]

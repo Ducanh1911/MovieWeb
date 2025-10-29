@@ -7,8 +7,8 @@ namespace MovieWebApp.Application.Interfaces
     {
         Task<IEnumerable<Genre>> GetAllAsync();
         Task<Genre> GetByIdAsync(int id);
-        Task<Genre> CreateGenreAsync(GenreDto genredto);
-        //Task<Genre> UpdateGenreAsync(int id, GenreDto genre);
+   
+        Task<Genre> CreateGenreAsync(GenreDto genreDto);
         Task<bool> DeleteGenreAsync(int id);
     }
 }

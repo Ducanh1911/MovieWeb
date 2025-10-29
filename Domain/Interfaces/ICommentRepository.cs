@@ -13,3 +13,5 @@ namespace MovieWebApp.Domain.Interfaces
         Task<List<Comment>> GetAllAsync();
     }
 }
+
+

@@ -13,11 +13,9 @@ namespace MovieWebApp.Presentation.Controllers
     public class MovieController : ControllerBase
     {
         private readonly IMovieService _movieService;
-        private readonly CloudinaryService _cloudinaryService;
-        public MovieController(IMovieService movieService, CloudinaryService cloudinaryService)
+        public MovieController(IMovieService movieService)
         {
             _movieService = movieService;
-            _cloudinaryService = cloudinaryService;
         }
 
         [HttpGet]
@@ -35,21 +33,6 @@ namespace MovieWebApp.Presentation.Controllers
             {
                 return NotFound();
             }
-            return Ok(movie);
-        }
-
-        [HttpGet("{id}/details")]
-        public async Task<IActionResult> GetMovieDetails(int id)
-        {
-            var movie = await _movieService.GetMovieByIdAsync(id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-            
-            // Tăng số lượt xem
-            await _movieService.IncrementViewCountAsync(id);
-            
             return Ok(movie);
         }
 
@@ -78,18 +61,14 @@ namespace MovieWebApp.Presentation.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> CreateMovie([FromForm] MovieUploadRequest request)
+        public async Task<IActionResult> CreateMovie([FromBody] MovieUploadRequest request)
         {
             try
             {
-                string posterUrl = null;
-                string videoUrl = null;
-
-                if (request.Poster != null)
-                    posterUrl = await _cloudinaryService.UploadFileAsync(request.Poster, "posters");
-
-                if (request.Video != null)
-                    videoUrl = await _cloudinaryService.UploadFileAsync(request.Video, "videos");
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
                 var dto = new MovieDto
                 {
                     MovieName = request.MovieName,
@@ -97,10 +76,9 @@ namespace MovieWebApp.Presentation.Controllers
                     ReleaseYear = request.ReleaseYear,
                     Country = request.Country,
                     Language = request.Language,
-                    Poster = posterUrl,
-                    VideoUrl = videoUrl,
+                    Poster = request.Poster,
+                    VideoUrl = request.VideoUrl,
                     GenreIds = request.GenreIds,
-                    createdAt = DateTime.Now
                 };
 
                 var movie = await _movieService.CreateMovieAsync(dto);
@@ -112,8 +90,8 @@ namespace MovieWebApp.Presentation.Controllers
             }
         }
     
-        [Authorize]
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateMovie(int id, [FromBody] MovieDto dto)
         {
             try
@@ -134,9 +112,9 @@ namespace MovieWebApp.Presentation.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovie(int id)
         {
-           var movie = await _movieService.DeleteMovieAsync(id);
-            if (movie == null) return NotFound();
-            return NoContent();
+           var deleted = await _movieService.DeleteMovieAsync(id);
+            if (!deleted) return NotFound();
+            return Ok(new { success = true });
             
         }
 
