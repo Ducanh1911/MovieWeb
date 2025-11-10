@@ -120,7 +120,7 @@ namespace MovieWebApp.Application.Services
                 movie.Rating = averageRating;
                 // Lấy danh sách genreIds hiện tại của phim
                 var genreIds = movie.Genres?.Select(g => g.GenresId).ToList() ?? new List<int>();
-                await _movieRepository.UpdateAsync(movie, genreIds);
+                await _movieRepository.UpdateAsync(movie);
             }
         }
 

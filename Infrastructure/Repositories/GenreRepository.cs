@@ -13,6 +13,13 @@ namespace MovieWebApp.Infrastructure.Repositories
         {
             _context = context;
         }
+
+        public async Task<IEnumerable<Genre>> GetGenresByIdsAsync(IEnumerable<int> genreIds)
+        {
+            return await _context.genres
+                .Where(g => genreIds.Contains(g.GenresId))
+                .ToListAsync();
+        }
         public async Task<IEnumerable<Genre>> getAsync()
         {
             var genre = await _context.genres.ToListAsync();
@@ -48,7 +55,6 @@ namespace MovieWebApp.Infrastructure.Repositories
             _context.genres.Remove(genre);
             await _context.SaveChangesAsync();
             return true;
-
         }       
     }
 }

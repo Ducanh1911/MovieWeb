@@ -9,6 +9,7 @@ namespace MovieWebApp.Domain.Interfaces
         Task<Genre> CreateAsync(Genre genre);
         Task<Genre> updateAsync(Genre genre);
         Task<bool> deleteAsync(int id);
+        Task<IEnumerable<Genre>> GetGenresByIdsAsync(IEnumerable<int> genreIds);
 
     }
 }

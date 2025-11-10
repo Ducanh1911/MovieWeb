@@ -673,17 +673,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/MovieUploadRequest"
+                "$ref": "#/components/schemas/MovieDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/MovieUploadRequest"
+                "$ref": "#/components/schemas/MovieDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/MovieUploadRequest"
+                "$ref": "#/components/schemas/MovieDto"
               }
             }
           }
@@ -822,38 +822,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/api/Movie/paged": {
-      "get": {
-        "tags": [
-          "Movie"
-        ],
-        "parameters": [
-          {
-            "name": "pageNumber",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
           }
         }
       }
@@ -1179,54 +1147,6 @@
         "additionalProperties": false
       },
       "MovieDto": {
-        "required": [
-          "movieName"
-        ],
-        "type": "object",
-        "properties": {
-          "movieName": {
-            "maxLength": 100,
-            "minLength": 1,
-            "type": "string"
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "releaseYear": {
-            "maximum": 2025,
-            "minimum": 2000,
-            "type": "integer",
-            "format": "int32"
-          },
-          "country": {
-            "type": "string",
-            "nullable": true
-          },
-          "language": {
-            "type": "string",
-            "nullable": true
-          },
-          "poster": {
-            "type": "string",
-            "nullable": true
-          },
-          "videoUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "genreIds": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "MovieUploadRequest": {
         "required": [
           "movieName"
         ],

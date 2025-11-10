@@ -435,7 +435,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "MovieWebApp.Presentation.Request.MovieUploadRequest",
+        "Type": "MovieWebApp.Application.DTOs.MovieDto",
         "IsRequired": true
       }
     ],
@@ -490,27 +490,6 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MovieWebApp.Presentation.Controllers.MovieController",
-    "Method": "GetPaged",
-    "RelativePath": "api/Movie/paged",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "pageNumber",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "pageSize",
-        "Type": "System.Int32",
-        "IsRequired": false
       }
     ],
     "ReturnTypes": []

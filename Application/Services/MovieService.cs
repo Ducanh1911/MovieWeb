@@ -2,16 +2,21 @@
 using MovieWebApp.Application.Interfaces;
 using MovieWebApp.Domain.Entities;
 using MovieWebApp.Domain.Interfaces;
- 
+using MovieWebApp.Infrastructure.SeedWorks;
+using MovieWebApp.Infrastructure.Repositories;
+
 
 namespace MovieWebApp.Application.Services
 {
     public class MovieService : IMovieService
     {
         private readonly IMovieRepository _movieRepository;
-        public MovieService(IMovieRepository movieRepository)
+        private readonly IGenreRepository _genreRepository;
+
+        public MovieService(IMovieRepository movieRepository, IGenreRepository genreRepository)
         {
-           _movieRepository = movieRepository;
+            _movieRepository = movieRepository;
+            _genreRepository = genreRepository;
         }
         public async Task<Movie> CreateMovieAsync(MovieDto dto)
         {
@@ -22,18 +27,36 @@ namespace MovieWebApp.Application.Services
                 ReleaseYear = dto.ReleaseYear,
                 Country = dto.Country,
                 Language = dto.Language,
+                Genres = new List<Genre>(),
                 Poster = dto.Poster,
                 VideoUrl = dto.VideoUrl,
             };
-
-            var created = await _movieRepository.AddAsync(movie, dto.GenreIds);
+            if (dto.GenreIds != null && dto.GenreIds.Any())
+            {
+                var genres = await _genreRepository.GetGenresByIdsAsync(dto.GenreIds);
+                if (!genres.Any())
+                {
+                    throw new ArgumentException("Không tìm thấy thể loại nào với các ID được cung cấp.");
+                }
+                foreach (var genre in genres)
+                {
+                    movie.Genres.Add(genre); // Thêm từng Genre
+                }
+            }
+            var created = await _movieRepository.AddAsync(movie);
             return created;
         } 
 
         public async Task<bool> DeleteMovieAsync(int id)
         {
-            var ok = await _movieRepository.DeleteAsync(id);
-            return ok;
+            var movie = await _movieRepository.GetByIdAsync(id);
+            if (movie == null)
+            {
+                return false;
+            }
+            movie.IsDeleted = true;
+            await _movieRepository.UpdateAsync(movie);
+            return true;
         }
 
         public async Task<IEnumerable<Movie>> GetAllMoviesAsync()
@@ -69,54 +92,39 @@ namespace MovieWebApp.Application.Services
 
         public async Task<Movie?> UpdateMovieAsync(int id, MovieDto dto)
         {
-            var movie = new Movie
+            var movie = await _movieRepository.GetByIdAsync(id);
+            if (movie == null)
             {
-                MovieId = id,
-                MovieName = dto.MovieName,
-                Description = dto.Description,
-                ReleaseYear = dto.ReleaseYear,
-                Country = dto.Country,
-                Language = dto.Language,
-                Poster = dto.Poster,
-                VideoUrl = dto.VideoUrl,
-            };
-
-            var updated = await _movieRepository.UpdateAsync(movie, dto.GenreIds);
+                return null;
+            }
+            movie.MovieName = dto.MovieName;
+            movie.Description = dto.Description;
+            movie.ReleaseYear = dto.ReleaseYear;
+            movie.Country = dto.Country;
+            movie.Language = dto.Language;
+            movie.Poster = dto.Poster;
+            movie.VideoUrl = dto.VideoUrl;
+            if (dto.GenreIds != null && dto.GenreIds.Any())
+            {
+                var genres = await _genreRepository.GetGenresByIdsAsync(dto.GenreIds);
+                if (!genres.Any())
+                {
+                    throw new ArgumentException("Không tìm thấy thể loại nào với các ID được cung cấp.");
+                }
+                foreach (var genre in genres)
+                {
+                    movie.Genres.Add(genre); 
+                }
+            }
+            var updated = await _movieRepository.UpdateAsync(movie);
             return updated;
         }
 
-        public async Task<(IEnumerable<Movie> Movies, int TotalCount)> GetPagedMoviesAsync(int pageNumber, int pageSize)
-        {
-            return await _movieRepository.GetPagedAsync(pageNumber, pageSize);
-        }
-
+      
         public Task<bool> IncrementViewCountAsync(int movieId)
         {
             throw new NotImplementedException();
         }
-
-        //public async Task<bool> UpdatePosterAsync(int movieId, string posterPath)
-
-        //{
-        //    var movie = await _movieRepository.GetByIdAsync(movieId);
-        //    if (movie == null) return false;
-
-        //    movie.Poster = posterPath;
-        //    await _movieRepository.UpdateAsync(movie, movie.Genres.Select(g => g.GenresId).ToList());
-
-        //    return true;
-        //}
-
-        //public async Task<bool> UpdateVideoUrlAsync(int movieId, string videoPath)
-        //{
-        //    var movie = await _movieRepository.GetByIdAsync(movieId);
-        //    if (movie == null) return false;
-
-        //    movie.VideoUrl = videoPath;
-        //    await _movieRepository.UpdateAsync(movie, movie.Genres.Select(g => g.GenresId).ToList());
-
-        //    return true;
-        //}
 
     }
 }

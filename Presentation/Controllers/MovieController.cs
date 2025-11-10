@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using MovieWebApp.Application.DTOs;
 using MovieWebApp.Application.Interfaces;
 using MovieWebApp.Application.Services;
-using MovieWebApp.Presentation.Request;
 
 namespace MovieWebApp.Presentation.Controllers
 {
@@ -43,50 +42,43 @@ namespace MovieWebApp.Presentation.Controllers
             return Ok(movies);
         }
 
-        [HttpGet("paged")]
-        public async Task<IActionResult> GetPaged([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
-        {
-            var (movies, totalCount) = await _movieService.GetPagedMoviesAsync(pageNumber, pageSize);
+        //[HttpGet("paged")]
+        //public async Task<IActionResult> GetPaged([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        //{
+        //    var (movies, totalCount) = await _movieService.GetPagedMoviesAsync(pageNumber, pageSize);
 
-            var response = new
-            {
-                TotalCount = totalCount,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize),
-                Data = movies
-            };
-            return Ok(response);
-        }
+        //    var response = new
+        //    {
+        //        TotalCount = totalCount,
+        //        PageNumber = pageNumber,
+        //        PageSize = pageSize,
+        //        TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize),
+        //        Data = movies
+        //    };
+        //    return Ok(response);
+        //}
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> CreateMovie([FromBody] MovieUploadRequest request)
+        public async Task<IActionResult> CreateMovie([FromBody] MovieDto request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { message = "Dữ liệu không hợp lệ.", errors = ModelState });
+            }
+
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-                var dto = new MovieDto
-                {
-                    MovieName = request.MovieName,
-                    Description = request.Description,
-                    ReleaseYear = request.ReleaseYear,
-                    Country = request.Country,
-                    Language = request.Language,
-                    Poster = request.Poster,
-                    VideoUrl = request.VideoUrl,
-                    GenreIds = request.GenreIds,
-                };
-
-                var movie = await _movieService.CreateMovieAsync(dto);
-                return Ok(movie);
+                var movie = await _movieService.CreateMovieAsync(request);
+                return CreatedAtAction(nameof(GetById), new { id = movie.MovieId }, movie);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                return StatusCode(500, new { message = "Lỗi server khi tạo phim.", error = ex.Message });
             }
         }
     
@@ -94,17 +86,27 @@ namespace MovieWebApp.Presentation.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateMovie(int id, [FromBody] MovieDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { message = "Dữ liệu không hợp lệ.", errors = ModelState });
+            }
+
             try
             {
-                if (!ModelState.IsValid) 
-                    return BadRequest(ModelState);
                 var movie = await _movieService.UpdateMovieAsync(id, dto);
-                if (movie == null) return NotFound();
+                if (movie == null)
+                {
+                    return NotFound(new { message = $"Phim với ID {id} không tồn tại." });
+                }
                 return Ok(movie);
             }
-            catch(InvalidOperationException ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Lỗi server khi cập nhật phim.", error = ex.Message });
             }
 
         }
@@ -112,10 +114,20 @@ namespace MovieWebApp.Presentation.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovie(int id)
         {
-           var deleted = await _movieService.DeleteMovieAsync(id);
-            if (!deleted) return NotFound();
-            return Ok(new { success = true });
-            
+            try
+            {
+                var deleted = await _movieService.DeleteMovieAsync(id);
+                if (!deleted)
+                {
+                    return NotFound(new { message = $"Phim với ID {id} không tồn tại." });
+                }
+                return Ok(new { message = "Xóa phim thành công." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Lỗi server khi xóa phim.", error = ex.Message });
+            }
+
         }
 
     }
