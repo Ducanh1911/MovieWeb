@@ -3,15 +3,18 @@ using MovieWebApp.Domain.Interfaces;
 using MovieWebApp.Infrastructure.Data;
 using MovieWebApp.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using MovieWebApp.Infrastructure.SeedWorks;
 
 namespace MovieWebApp.Infrastructure.Repositories
 {
-    public class FavoriteRepository : IFavoriteRepository
+    public class FavoriteRepository : RepositoryBase<Favorite, int> ,IFavoriteRepository
     {
         private readonly ApplicationDbContext _context;
-        public FavoriteRepository(ApplicationDbContext context)
+        public FavoriteRepository(ApplicationDbContext context) : base(context)
         {
-            _context = context;
+            {
+                _context = context;
+            }
         }
         public async Task<IEnumerable<Favorite>> GetFavoritesByUserAsync(int userId)
         {
@@ -27,11 +30,11 @@ namespace MovieWebApp.Infrastructure.Repositories
                 .FirstOrDefaultAsync(f => f.UserId == userId && f.MovieId == movieId);
         }
 
-        public async Task AddAsync(Favorite favorite)
-        {
-            await _context.favorites.AddAsync(favorite);
-            await _context.SaveChangesAsync();
-        }
+        //public async Task AddAsync(Favorite favorite)
+        //{
+        //    await _context.favorites.AddAsync(favorite);
+        //    await _context.SaveChangesAsync();
+        //}
 
         public async Task RemoveAsync(Favorite favorite)
         {

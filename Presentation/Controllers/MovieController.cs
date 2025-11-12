@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MovieWebApp.Application.DTOs;
 using MovieWebApp.Application.Interfaces;
 using MovieWebApp.Application.Services;
+using MovieWebApp.Infrastructure.SeedWorks;
 
 namespace MovieWebApp.Presentation.Controllers
 {
@@ -81,7 +82,35 @@ namespace MovieWebApp.Presentation.Controllers
                 return StatusCode(500, new { message = "Lỗi server khi tạo phim.", error = ex.Message });
             }
         }
-    
+        //public async Task<ApiResult<MovieDto>> CreateMovie([FromBody] MovieDto request)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return new ApiResult<MovieDto>(false, "lỗi", 400);
+        //    }
+
+        //    try
+        //    {
+        //        var movie = await _movieService.CreateMovieAsync(request);
+        //        return new ApiResult<MovieDto>(true, "thêm phim thành công", 400);
+
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        return new ApiResult<MovieDto>(false, ex.Message, 400);
+
+        //    }
+        //    catch (UnauthorizedAccessException ex)
+        //    {
+        //        return new ApiResult<MovieDto>(false, ex.Message, 401);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ApiResult<MovieDto>(false, "LỖi khi tạo phim", 500);
+
+        //    }
+        //}
+
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateMovie(int id, [FromBody] MovieDto dto)

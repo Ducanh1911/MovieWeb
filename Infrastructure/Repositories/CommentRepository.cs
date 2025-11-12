@@ -2,41 +2,43 @@ using Microsoft.EntityFrameworkCore;
 using MovieWebApp.Domain.Entities;
 using MovieWebApp.Domain.Interfaces;
 using MovieWebApp.Infrastructure.Data;
+using MovieWebApp.Infrastructure.SeedWorks;
 
 namespace MovieWebApp.Infrastructure.Repositories
 {
-    public class CommentRepository : ICommentRepository
+    public class CommentRepository : RepositoryBase<Comment, int >, ICommentRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public CommentRepository(ApplicationDbContext context)
+        public CommentRepository(ApplicationDbContext context) : base(context)
         {
-            _context = context;
+            {
+                _context = context;
+            }
         }
+        //public async Task<Comment> CreateAsync(Comment comment)
+        //{
+        //    _context.Comments.Add(comment);
+        //    await _context.SaveChangesAsync();
+        //    return comment;
+        //}
 
-        public async Task<Comment> CreateAsync(Comment comment)
-        {
-            _context.Comments.Add(comment);
-            await _context.SaveChangesAsync();
-            return comment;
-        }
+        //public async Task<Comment> UpdateAsync(Comment comment)
+        //{
+        //    _context.Comments.Update(comment);
+        //    await _context.SaveChangesAsync();
+        //    return comment;
+        //}
 
-        public async Task<Comment> UpdateAsync(Comment comment)
-        {
-            _context.Comments.Update(comment);
-            await _context.SaveChangesAsync();
-            return comment;
-        }
+        //public async Task<bool> DeleteAsync(int commentId)
+        //{
+        //    var comment = await _context.Comments.FindAsync(commentId);
+        //    if (comment == null) return false;
 
-        public async Task<bool> DeleteAsync(int commentId)
-        {
-            var comment = await _context.Comments.FindAsync(commentId);
-            if (comment == null) return false;
-
-            _context.Comments.Remove(comment);
-            await _context.SaveChangesAsync();
-            return true;
-        }
+        //    _context.Comments.Remove(comment);
+        //    await _context.SaveChangesAsync();
+        //    return true;
+        //}
 
         public async Task<Comment> GetByIdAsync(int commentId)
         {

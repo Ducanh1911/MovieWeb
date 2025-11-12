@@ -20,31 +20,39 @@ namespace MovieWebApp.Application.Services
         }
         public async Task<Movie> CreateMovieAsync(MovieDto dto)
         {
-            var movie = new Movie
+            try
             {
-                MovieName = dto.MovieName,
-                Description = dto.Description,
-                ReleaseYear = dto.ReleaseYear,
-                Country = dto.Country,
-                Language = dto.Language,
-                Genres = new List<Genre>(),
-                Poster = dto.Poster,
-                VideoUrl = dto.VideoUrl,
-            };
-            if (dto.GenreIds != null && dto.GenreIds.Any())
-            {
-                var genres = await _genreRepository.GetGenresByIdsAsync(dto.GenreIds);
-                if (!genres.Any())
+                var movie = new Movie
                 {
-                    throw new ArgumentException("Không tìm thấy thể loại nào với các ID được cung cấp.");
-                }
-                foreach (var genre in genres)
+                    MovieName = dto.MovieName,
+                    Description = dto.Description,
+                    ReleaseYear = dto.ReleaseYear,
+                    Country = dto.Country,
+                    Language = dto.Language,
+                    Genres = new List<Genre>(),
+                    Poster = dto.Poster,
+                    VideoUrl = dto.VideoUrl,
+                };
+                if (dto.GenreIds != null && dto.GenreIds.Any())
                 {
-                    movie.Genres.Add(genre); // Thêm từng Genre
+                    var genres = await _genreRepository.GetGenresByIdsAsync(dto.GenreIds);
+                    if (!genres.Any())
+                    {
+                        throw new ArgumentException("Không tìm thấy thể loại nào với các ID được cung cấp.");
+                    }
+                    foreach (var genre in genres)
+                    {
+                        movie.Genres.Add(genre);
+                    }
                 }
+                var created = await _movieRepository.AddAsync(movie);
+                return created;
             }
-            var created = await _movieRepository.AddAsync(movie);
-            return created;
+            catch (Exception ex)
+            {
+                throw new Exception();
+            }
+
         } 
 
         public async Task<bool> DeleteMovieAsync(int id)

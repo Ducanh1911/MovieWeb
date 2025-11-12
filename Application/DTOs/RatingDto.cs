@@ -15,7 +15,6 @@ namespace MovieWebApp.Application.DTOs
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         
-        // Thông tin người dùng
         public string UserName { get; set; }
     }
     

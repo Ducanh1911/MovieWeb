@@ -11,7 +11,7 @@ namespace MovieWebApp.Application.DTOs
 
         public string Description { get; set; }
 
-        [Range(2000, 2025, ErrorMessage = "Năm phát hành phải từ 2000 đến 2025")]
+        [Range(1975, 2025, ErrorMessage = "Năm phát hành phải từ 2000 đến 2025")]
         public int ReleaseYear { get; set; }
         public string Country { get; set; }
         public string Language { get; set; }

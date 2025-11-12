@@ -16,12 +16,12 @@ namespace MovieWebApp.Application.Services
 
         public async Task<IEnumerable<Genre>> GetAllAsync()
         {
-            return await _genreRepository.getAsync();
+            return await _genreRepository.GetAllAsync();
         }
 
         public async Task<Genre> GetByIdAsync(int id)
         {
-            return await _genreRepository.getByIdAsync(id);
+            return await _genreRepository.GetByIdAsync(id);
         }
 
         public async Task<Genre> CreateGenreAsync(GenreDto genredto)
@@ -30,19 +30,12 @@ namespace MovieWebApp.Application.Services
             {
                 Name = genredto.Name,
             };
-            genre.Name = "hanh dong";
-            Console.WriteLine(genre.Name);
-            return await _genreRepository.CreateAsync(genre);
+            return await _genreRepository.AddAsync(genre);
         }
 
-       
-        //public Task<Genre> UpdateGenreAsync(int id, GenreDto genre)
-        //{
-            
-        //}
         public async Task<bool> DeleteGenreAsync(int id)
         {
-            return await (_genreRepository.deleteAsync(id));
+            return await (_genreRepository.DeleteAsync(id));
         }
     }
 }

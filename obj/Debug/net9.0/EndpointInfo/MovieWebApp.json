@@ -1163,7 +1163,7 @@
           },
           "releaseYear": {
             "maximum": 2025,
-            "minimum": 2000,
+            "minimum": 1975,
             "type": "integer",
             "format": "int32"
           },
