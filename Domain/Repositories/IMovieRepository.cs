@@ -5,10 +5,11 @@ namespace MovieWebApp.Domain.Interfaces
 {
     public interface IMovieRepository : IRepository<Movie, int>
     {
-        Task<IEnumerable<Movie>> GetAsync();
+        Task<IEnumerable<Movie>> GetMovieClientAsync();
+        Task<IEnumerable<Movie>> GetMovieAdminAsync();
         Task<Movie> GetByIdAsync(int id);
         Task<IEnumerable<Movie>> SearchByNameAsync(string keyword);
-        //Task<(IEnumerable<Movie> Movies, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize);
+        Task<(IEnumerable<Movie> Movies, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize);
 
     }
 }

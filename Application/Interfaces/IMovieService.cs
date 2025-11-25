@@ -5,13 +5,13 @@ namespace MovieWebApp.Application.Interfaces
 {
     public interface IMovieService
     {
-        Task<Movie> CreateMovieAsync(MovieDto movieDto);
-        Task<IEnumerable<Movie>> GetAllMoviesAsync();
-        Task<Movie?> GetMovieByIdAsync(int id);
-        Task<Movie?> UpdateMovieAsync(int id, MovieDto dto);
+        Task<Movie> CreateMovieWithFilesAsync(MovieUploadRequest request);
+        Task<Movie?> UpdateMovieWithFilesAsync(int id, MovieUploadRequest request);
         Task<bool> DeleteMovieAsync(int id);
+        Task<IEnumerable<Movie>> GetAllMoviesClientAsync();
+        Task<IEnumerable<Movie>> GetAllMoviesAdminAsync();
+        Task<(IEnumerable<Movie> Movies, int TotalCount)> GetPagedMoviesAsync(int pageNumber, int pageSize);
+        Task<Movie?> GetMovieByIdAsync(int id);
         Task<IEnumerable<MovieDto>> SearchMoviesAsync(string keyword);
-        //Task<(IEnumerable<Movie> Movies, int TotalCount)> GetPagedMoviesAsync(int pageNumber, int pageSize);
-        Task<bool> IncrementViewCountAsync(int movieId);
     }
 }

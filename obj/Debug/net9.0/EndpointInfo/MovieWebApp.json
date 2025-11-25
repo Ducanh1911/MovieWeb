@@ -6,186 +6,6 @@
     "version": "v1"
   },
   "paths": {
-    "/api/Admin": {
-      "get": {
-        "tags": [
-          "Admin"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Admin/users": {
-      "get": {
-        "tags": [
-          "Admin"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Admin/users/{userId}": {
-      "get": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Admin/users/{userId}/role": {
-      "put": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateUserRoleDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateUserRoleDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateUserRoleDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Admin/ratings": {
-      "get": {
-        "tags": [
-          "Admin"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Admin/ratings/{ratingId}": {
-      "delete": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "ratingId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Admin/comments": {
-      "get": {
-        "tags": [
-          "Admin"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Admin/comments/{commentId}": {
-      "delete": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "commentId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/Auth/{id}": {
       "get": {
         "tags": [
@@ -302,7 +122,7 @@
         }
       }
     },
-    "/api/Comment": {
+    "/api/comments": {
       "post": {
         "tags": [
           "Comment"
@@ -333,7 +153,7 @@
         }
       }
     },
-    "/api/Comment/{id}": {
+    "/api/comments/{id}": {
       "put": {
         "tags": [
           "Comment"
@@ -417,7 +237,7 @@
         }
       }
     },
-    "/api/Comment/movie/{movieId}": {
+    "/api/comments/movie/{movieId}": {
       "get": {
         "tags": [
           "Comment"
@@ -440,7 +260,7 @@
         }
       }
     },
-    "/api/Comment/user/{userId}": {
+    "/api/comments/user/{userId}": {
       "get": {
         "tags": [
           "Comment"
@@ -463,7 +283,7 @@
         }
       }
     },
-    "/api/Favorite": {
+    "/api/favorites": {
       "get": {
         "tags": [
           "Favorite"
@@ -504,7 +324,7 @@
         }
       }
     },
-    "/api/Favorite/{movieid}": {
+    "/api/favorites/{movieId}": {
       "delete": {
         "tags": [
           "Favorite"
@@ -527,7 +347,7 @@
         }
       }
     },
-    "/api/Genre": {
+    "/api/genres": {
       "get": {
         "tags": [
           "Genre"
@@ -537,7 +357,32 @@
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/genres/{id}": {
+      "get": {
+        "tags": [
+          "Genre"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/admin/genres": {
       "post": {
         "tags": [
           "Genre"
@@ -566,7 +411,9 @@
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/admin/genres/{id}": {
       "delete": {
         "tags": [
           "Genre"
@@ -574,33 +421,55 @@
         "parameters": [
           {
             "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/movies": {
+      "get": {
+        "tags": [
+          "Movie"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/movies/paged": {
+      "get": {
+        "tags": [
+          "Movie"
+        ],
+        "parameters": [
+          {
+            "name": "pageNumber",
             "in": "query",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 1
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Genre/{id}": {
-      "get": {
-        "tags": [
-          "Genre"
-        ],
-        "parameters": [
+          },
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
+            "name": "pageSize",
+            "in": "query",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 10
             }
           }
         ],
@@ -611,91 +480,7 @@
         }
       }
     },
-    "/api/Genre/duplicate": {
-      "post": {
-        "tags": [
-          "Genre"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GenreDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GenreDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/GenreDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Home": {
-      "get": {
-        "tags": [
-          "Home"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Movie": {
-      "get": {
-        "tags": [
-          "Movie"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Movie"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MovieDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MovieDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/MovieDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Movie/{id}": {
+    "/api/movies/{id}": {
       "get": {
         "tags": [
           "Movie"
@@ -716,70 +501,9 @@
             "description": "OK"
           }
         }
-      },
-      "put": {
-        "tags": [
-          "Movie"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MovieDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MovieDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/MovieDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Movie"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
       }
     },
-    "/api/Movie/search": {
+    "/api/movies/search": {
       "get": {
         "tags": [
           "Movie"
@@ -826,7 +550,225 @@
         }
       }
     },
-    "/api/Rating": {
+    "/api/admin/movies/all": {
+      "get": {
+        "tags": [
+          "Movie"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/admin/movies": {
+      "post": {
+        "tags": [
+          "Movie"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "GenreIds",
+                  "MovieName"
+                ],
+                "type": "object",
+                "properties": {
+                  "MovieName": {
+                    "maxLength": 100,
+                    "type": "string"
+                  },
+                  "Description": {
+                    "type": "string"
+                  },
+                  "ReleaseYear": {
+                    "maximum": 2025,
+                    "minimum": 1975,
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Country": {
+                    "type": "string"
+                  },
+                  "Language": {
+                    "type": "string"
+                  },
+                  "GenreIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  },
+                  "PosterFile": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "VideoFile": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "MovieName": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "ReleaseYear": {
+                  "style": "form"
+                },
+                "Country": {
+                  "style": "form"
+                },
+                "Language": {
+                  "style": "form"
+                },
+                "GenreIds": {
+                  "style": "form"
+                },
+                "PosterFile": {
+                  "style": "form"
+                },
+                "VideoFile": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/admin/movies/{id}": {
+      "put": {
+        "tags": [
+          "Movie"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "GenreIds",
+                  "MovieName"
+                ],
+                "type": "object",
+                "properties": {
+                  "MovieName": {
+                    "maxLength": 100,
+                    "type": "string"
+                  },
+                  "Description": {
+                    "type": "string"
+                  },
+                  "ReleaseYear": {
+                    "maximum": 2025,
+                    "minimum": 1975,
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Country": {
+                    "type": "string"
+                  },
+                  "Language": {
+                    "type": "string"
+                  },
+                  "GenreIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  },
+                  "PosterFile": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "VideoFile": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "MovieName": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "ReleaseYear": {
+                  "style": "form"
+                },
+                "Country": {
+                  "style": "form"
+                },
+                "Language": {
+                  "style": "form"
+                },
+                "GenreIds": {
+                  "style": "form"
+                },
+                "PosterFile": {
+                  "style": "form"
+                },
+                "VideoFile": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Movie"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ratings": {
       "post": {
         "tags": [
           "Rating"
@@ -857,7 +799,7 @@
         }
       }
     },
-    "/api/Rating/{id}": {
+    "/api/ratings/{id}": {
       "put": {
         "tags": [
           "Rating"
@@ -941,7 +883,7 @@
         }
       }
     },
-    "/api/Rating/movie/{movieId}": {
+    "/api/ratings/movie/{movieId}": {
       "get": {
         "tags": [
           "Rating"
@@ -964,7 +906,7 @@
         }
       }
     },
-    "/api/Rating/user/{userId}": {
+    "/api/ratings/user/{userId}": {
       "get": {
         "tags": [
           "Rating"
@@ -987,7 +929,7 @@
         }
       }
     },
-    "/api/Rating/movie/{movieId}/user": {
+    "/api/ratings/movie/{movieId}/user": {
       "get": {
         "tags": [
           "Rating"
@@ -1010,7 +952,7 @@
         }
       }
     },
-    "/api/Rating/movie/{movieId}/average": {
+    "/api/ratings/movie/{movieId}/average": {
       "get": {
         "tags": [
           "Rating"
@@ -1163,7 +1105,7 @@
           },
           "releaseYear": {
             "maximum": 2025,
-            "minimum": 1975,
+            "minimum": 2000,
             "type": "integer",
             "format": "int32"
           },
@@ -1255,16 +1197,6 @@
             "format": "int32"
           },
           "review": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "UpdateUserRoleDto": {
-        "type": "object",
-        "properties": {
-          "role": {
             "type": "string",
             "nullable": true
           }

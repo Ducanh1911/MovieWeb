@@ -14,12 +14,18 @@ namespace MovieWebApp.Infrastructure.Repositories
         {
             _context = context;
         }
-       
-        public async Task<IEnumerable<Movie>> GetAsync()
+
+        public async Task<IEnumerable<Movie>> GetMovieClientAsync()
         {
             return await _context.movies
                    .Include(m => m.Genres)
                    .Where(m => m.IsDeleted == false)
+                   .ToListAsync();
+        }
+        public async Task<IEnumerable<Movie>> GetMovieAdminAsync()
+        {
+            return await _context.movies
+                   .Include(m => m.Genres)
                    .ToListAsync();
         }
 
@@ -30,6 +36,7 @@ namespace MovieWebApp.Infrastructure.Repositories
                 .FirstOrDefaultAsync(m => m.MovieId == id);
         }
 
+   
 
         public async Task<IEnumerable<Movie>> SearchByNameAsync(string keyword)
         {
@@ -40,6 +47,23 @@ namespace MovieWebApp.Infrastructure.Repositories
                 .Include(m => m.Genres)
                 .Where(m => m.MovieName.Contains(keyword))
                 .ToListAsync();
+        }
+
+        public async Task<(IEnumerable<Movie> Movies, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize)
+        {
+            var query = _context.movies
+                .Include(m => m.Genres)
+                .Where(m => m.IsDeleted == false);
+
+            var totalCount = await query.CountAsync();
+
+            var movies = await query
+                .OrderByDescending(m => m.createdAt)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (movies, totalCount);
         }
     }
 }

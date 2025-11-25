@@ -4,9 +4,9 @@ using MovieWebApp.Application.DTOs;
 using MovieWebApp.Application.Interfaces;
 using System.Security.Claims;
 
-namespace MovieWebApp.Presentation.Controllers
+namespace MovieWebApp.Presentation.Controllers.Client
 {
-    [Route("api/[controller]")]
+    [Route("api/ratings")]
     [ApiController]
     [Authorize]
     public class RatingController : ControllerBase
@@ -25,7 +25,7 @@ namespace MovieWebApp.Presentation.Controllers
             {
                 var userId = GetCurrentUserId();
                 var rating = await _ratingService.CreateRatingAsync(createRatingDto, userId);
-                return Ok(rating);
+                return Ok(new { message = "Tạo đánh giá thành công.", data = rating });
             }
             catch (InvalidOperationException ex)
             {
@@ -44,7 +44,7 @@ namespace MovieWebApp.Presentation.Controllers
             {
                 var userId = GetCurrentUserId();
                 var rating = await _ratingService.UpdateRatingAsync(id, updateRatingDto, userId);
-                return Ok(rating);
+                return Ok(new { message = "Cập nhật đánh giá thành công.", data = rating });
             }
             catch (ArgumentException ex)
             {
@@ -52,7 +52,7 @@ namespace MovieWebApp.Presentation.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Forbid(ex.Message);
+                return Unauthorized(new { message = "Bạn không có quyền cập nhật đánh giá này." });
             }
             catch (Exception ex)
             {
@@ -68,12 +68,12 @@ namespace MovieWebApp.Presentation.Controllers
                 var userId = GetCurrentUserId();
                 var result = await _ratingService.DeleteRatingAsync(id, userId);
                 if (!result)
-                    return NotFound();
-                return NoContent();
+                    return NotFound(new { message = "Không tìm thấy đánh giá." });
+                return Ok(new { message = "Xóa đánh giá thành công." });
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Forbid(ex.Message);
+                return Unauthorized(new { message = "Bạn không có quyền xóa đánh giá này." });
             }
             catch (Exception ex)
             {
@@ -82,26 +82,29 @@ namespace MovieWebApp.Presentation.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetRating(int id)
         {
             var rating = await _ratingService.GetRatingByIdAsync(id);
             if (rating == null)
-                return NotFound();
-            return Ok(rating);
+                return NotFound(new { message = "Không tìm thấy đánh giá." });
+            return Ok(new { data = rating });
         }
 
         [HttpGet("movie/{movieId}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetRatingsByMovie(int movieId)
         {
             var ratings = await _ratingService.GetRatingsByMovieIdAsync(movieId);
-            return Ok(ratings);
+            return Ok(new { data = ratings });
         }
 
         [HttpGet("user/{userId}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetRatingsByUser(int userId)
         {
             var ratings = await _ratingService.GetRatingsByUserIdAsync(userId);
-            return Ok(ratings);
+            return Ok(new { data = ratings });
         }
 
         [HttpGet("movie/{movieId}/user")]
@@ -109,14 +112,15 @@ namespace MovieWebApp.Presentation.Controllers
         {
             var userId = GetCurrentUserId();
             var rating = await _ratingService.GetUserRatingForMovieAsync(movieId, userId);
-            return Ok(rating);
+            return Ok(new { data = rating });
         }
 
         [HttpGet("movie/{movieId}/average")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAverageRating(int movieId)
         {
             var averageRating = await _ratingService.CalculateAverageRatingAsync(movieId);
-            return Ok(new { AverageRating = averageRating });
+            return Ok(new { averageRating });
         }
 
         private int GetCurrentUserId()
@@ -128,20 +132,3 @@ namespace MovieWebApp.Presentation.Controllers
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

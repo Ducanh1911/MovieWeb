@@ -34,7 +34,7 @@ namespace MovieWebApp.Application.Services
                 CreatedAt = DateTime.UtcNow
             };
 
-            var createdRating = await _ratingRepository.AddAsync(rating);
+            var createdRating = await _ratingRepository.CreateAsync(rating);
             
             // Cập nhật đánh giá trung bình của phim
             await UpdateMovieAverageRating(createRatingDto.MovieId);

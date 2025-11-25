@@ -24,7 +24,7 @@ namespace MovieWebApp.Application.Services
                 CreatedAt = DateTime.UtcNow
             };
 
-            var createdComment = await _commentRepository.AddAsync(comment);
+            var createdComment = await _commentRepository.CreateAsync(comment);
             return MapToDto(createdComment);
         }
 

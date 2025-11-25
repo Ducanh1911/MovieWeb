@@ -45,10 +45,6 @@ public class AuthController : ControllerBase
 
         try
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new { message = "Dữ liệu không hợp lệ.", errors = ModelState });
-            }
             var response = await _authService.RegisterAsync(model);
             _logger.LogInformation("Đăng ký thành công cho userId {UserId}", response.UserId);
             return Ok(response);

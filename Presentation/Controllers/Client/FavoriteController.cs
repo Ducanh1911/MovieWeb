@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieWebApp.Application.DTOs;
 using MovieWebApp.Application.Interfaces;
 using System.Security.Claims;
 
-namespace MovieWebApp.Presentation.Controllers
+namespace MovieWebApp.Presentation.Controllers.Client
 {
-    [Route("api/[controller]")]
+    [Route("api/favorites")]
     [ApiController]
-    [Authorize(Roles = "User")]
+    [Authorize]
     public class FavoriteController : ControllerBase
     {
         private readonly IFavoriteService _favoriteService;
@@ -20,17 +20,14 @@ namespace MovieWebApp.Presentation.Controllers
             _logger = logger;
         }
 
-        // helper an toàn để lấy userId từ token
         private bool TryGetUserId(out int userId)
         {
             userId = 0;
-            // kiểm tra cả ClaimTypes.NameIdentifier và "userId" (nếu bạn có thêm "userId" claim)
             var claimVal = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                            ?? User.FindFirst("userId")?.Value;
 
             if (string.IsNullOrEmpty(claimVal))
             {
-                // log claims để debug
                 var all = string.Join(", ", User.Claims.Select(c => $"{c.Type}:{c.Value}"));
                 _logger.LogWarning("No userId claim found. Claims: {Claims}", all);
                 return false;
@@ -42,28 +39,28 @@ namespace MovieWebApp.Presentation.Controllers
         [HttpGet]
         public async Task<IActionResult> GetFavoritesByUser()
         {
-            if (!TryGetUserId(out var userId)) return Unauthorized("Token không chứa userId hợp lệ.");
+            if (!TryGetUserId(out var userId))
+                return Unauthorized(new { message = "Token không chứa userId hợp lệ." });
 
             var favorites = await _favoriteService.GetFavoritesByUserAsync(userId);
-            return Ok(favorites);
+            return Ok(new { data = favorites });
         }
 
         [HttpPost]
         public async Task<IActionResult> AddFavorite([FromBody] FavoriteDto dto)
         {
-            if (dto == null) return BadRequest("Dữ liệu không hợp lệ");
+            if (dto == null)
+                return BadRequest(new { message = "Dữ liệu không hợp lệ" });
 
-            // lấy userId từ token
             if (!TryGetUserId(out var userId))
-                return Unauthorized("Token không chứa userId hợp lệ.");
+                return Unauthorized(new { message = "Token không chứa userId hợp lệ." });
 
             dto.UserId = userId;
 
             try
             {
                 var favorite = await _favoriteService.AddFavoriteAsync(dto);
-                var response = new { favorite.UserId, favorite.MovieId };
-                return Ok(response);
+                return Ok(new { message = "Thêm vào yêu thích thành công.", data = new { favorite.UserId, favorite.MovieId } });
             }
             catch (InvalidOperationException ex)
             {
@@ -72,28 +69,29 @@ namespace MovieWebApp.Presentation.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Lỗi khi thêm vào yêu thích");
-                return StatusCode(500, "Có lỗi xảy ra khi thêm favorite");
+                return StatusCode(500, new { message = "Có lỗi xảy ra khi thêm favorite" });
             }
         }
 
-
-        [HttpDelete("{movieid}")]
+        [HttpDelete("{movieId}")]
         public async Task<IActionResult> RemoveFavorite(int movieId)
         {
-            try {
-                if (!TryGetUserId(out var userId)) return Unauthorized("Token không chứa userId hợp lệ.");
+            try
+            {
+                if (!TryGetUserId(out var userId))
+                    return Unauthorized(new { message = "Token không chứa userId hợp lệ." });
 
                 var result = await _favoriteService.RemoveFavoriteAsync(userId, movieId);
-                if (!result) return NotFound("Không tìm thấy trong danh sách yêu thích");
+                if (!result)
+                    return NotFound(new { message = "Không tìm thấy trong danh sách yêu thích" });
+
+                return Ok(new { message = "Xóa khỏi yêu thích thành công." });
             }
-            catch
+            catch (Exception ex)
             {
-
+                _logger.LogError(ex, "Lỗi khi xóa yêu thích");
+                return StatusCode(500, new { message = "Có lỗi xảy ra" });
             }
-
-            return NoContent();
         }
-
-        
     }
 }
