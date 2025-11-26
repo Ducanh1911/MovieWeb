@@ -5,8 +5,8 @@ namespace MovieWebApp.Application.Interfaces
 {
     public interface IMovieService
     {
-        Task<Movie> CreateMovieWithFilesAsync(MovieUploadRequest request);
-        Task<Movie?> UpdateMovieWithFilesAsync(int id, MovieUploadRequest request);
+        Task<Movie> CreateMovieWithFilesAsync(MovieCreateRequest request);
+        Task<Movie?> UpdateMovieWithFilesAsync(int id, MovieUpdateRequest request);
         Task<bool> DeleteMovieAsync(int id);
         Task<IEnumerable<Movie>> GetAllMoviesClientAsync();
         Task<IEnumerable<Movie>> GetAllMoviesAdminAsync();

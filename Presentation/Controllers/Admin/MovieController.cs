@@ -31,8 +31,9 @@ namespace MovieWebApp.Presentation.Controllers.Admin
             }
         }
 
+
         [HttpPost]
-        public async Task<IActionResult> CreateMovie([FromForm] MovieUploadRequest request)
+        public async Task<IActionResult> CreateMovie([FromForm] MovieCreateRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -59,11 +60,17 @@ namespace MovieWebApp.Presentation.Controllers.Admin
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateMovie(int id, [FromForm] MovieUploadRequest request)
+        public async Task<IActionResult> UpdateMovie(int id, [FromForm] MovieUpdateRequest request)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(new { message = "Dữ liệu không hợp lệ.", errors = ModelState });
+                var errors = ModelState
+                    .Where(x => x.Value.Errors.Count > 0)
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                    );
+                return BadRequest(new { message = "Dữ liệu không hợp lệ.", errors = errors });
             }
 
             try

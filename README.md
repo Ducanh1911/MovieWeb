@@ -119,79 +119,143 @@ MovieWebApp/
 ### 🔑 Authentication (`/api/Auth`)
 - `POST /register` - Đăng ký tài khoản
 - `POST /login` - Đăng nhập
-- `POST /logout` - Đăng xuất
+- `GET /me` - Lấy thông tin user hiện tại
 
-### 🎬 Movie - Client (`/api/Client/Movie`)
-- `GET /` - Lấy danh sách phim
-- `GET /{id}` - Lấy thông tin phim cơ bản
-- `GET /{id}/details` - Lấy chi tiết phim (tăng view count)
-- `GET /search?keyword={keyword}` - Tìm kiếm phim
-- `GET /genre/{genreId}` - Lấy phim theo thể loại
+### 🎬 Movies (`/api/movies`)
+- `GET /` - Lấy tất cả phim
+- `GET /paged?pageNumber={n}&pageSize={s}&search={keyword}&genre={id}` - Lấy phim phân trang với search/filter
+- `GET /{id}` - Lấy chi tiết phim
 
-### 🎭 Genre - Client (`/api/Client/Genre`)
-- `GET /` - Lấy danh sách thể loại
+### 👑 Admin - Movies (`/api/admin/movies`)
+- `POST /` - Tạo phim mới (FormData: poster file upload)
+- `PUT /{id}` - Cập nhật phim (FormData: poster file upload)
+- `DELETE /{id}` - Xóa phim (soft delete)
+- `PATCH /{id}/toggle-status` - Bật/tắt trạng thái phim
+- `GET /all?includeDeleted={true/false}` - Lấy tất cả phim (bao gồm đã xóa)
 
-### ⭐ Rating (`/api/Rating`)
-- `POST /` - Tạo đánh giá
+### 🎭 Genres (`/api/genres`)
+- `GET /` - Lấy tất cả thể loại
+
+### 👑 Admin - Genres (`/api/admin/genres`)
+- `POST /` - Tạo thể loại mới
+- `DELETE /{id}` - Xóa thể loại
+
+### ⭐ Ratings (`/api/ratings`)
+- `POST /` - Tạo đánh giá (StarRating, Review, MovieId)
 - `PUT /{id}` - Cập nhật đánh giá
 - `DELETE /{id}` - Xóa đánh giá
-- `GET /movie/{movieId}` - Lấy đánh giá của phim
-- `GET /movie/{movieId}/user` - Lấy đánh giá của user
-- `GET /movie/{movieId}/average` - Lấy điểm trung bình
+- `GET /movie/{movieId}` - Lấy tất cả đánh giá của phim
+- `GET /movie/{movieId}/user` - Lấy đánh giá của user cho phim
+- `GET /movie/{movieId}/average` - Lấy điểm trung bình của phim
 
-### 💬 Comment (`/api/Comment`)
-- `POST /` - Tạo bình luận
+### 💬 Comments (`/api/comments`)
+- `POST /` - Tạo bình luận (Content, MovieId)
 - `PUT /{id}` - Cập nhật bình luận
 - `DELETE /{id}` - Xóa bình luận
-- `GET /movie/{movieId}` - Lấy bình luận của phim
-- `GET /user/{userId}` - Lấy bình luận của user
+- `GET /movie/{movieId}` - Lấy tất cả bình luận của phim
+- `GET /user/{userId}` - Lấy tất cả bình luận của user
 
-### ❤️ Favorite (`/api/Favorite`)
-- `POST /` - Thêm phim yêu thích
-- `DELETE /{id}` - Xóa phim yêu thích
-- `GET /user` - Lấy danh sách phim yêu thích của user
+### ❤️ Favorites (`/api/favorites`)
+- `GET /` - Lấy danh sách phim yêu thích của user hiện tại
+- `POST /` - Thêm phim vào yêu thích (MovieId)
+- `DELETE /{movieId}` - Xóa phim khỏi yêu thích
 
-### 👑 Admin - Movie (`/api/Admin/Movie`)
-- `GET /` - Lấy tất cả phim (bao gồm đã xóa)
-- `POST /` - Tạo phim mới
-- `PUT /{id}` - Cập nhật phim
-- `DELETE /{id}` - Xóa phim (soft delete)
+### 📊 Admin - Dashboard (`/api/Dashboard`)
+- `GET /stats` - Thống kê tổng quan (Admin only)
+  - Tổng users, movies, ratings, comments
+  - Top 5 phim xem nhiều nhất
+  - Top 5 phim đánh giá cao nhất
 
-### 👑 Admin - User (`/api/Admin/User`)
-- `GET /users` - Lấy danh sách người dùng
-- `GET /users/{id}` - Lấy thông tin user
-- `PUT /users/{id}/role` - Cập nhật role
-- `DELETE /users/{id}` - Xóa user
+### 👥 Admin - Users (`/api/User`)
+- `GET /` - Lấy tất cả người dùng (Admin only)
+- `GET /{id}` - Lấy chi tiết user (Admin only)
+- `PUT /{id}/role` - Cập nhật role user (Admin only)
+  - Body: `{ "Role": "Admin" | "User" }`
+- `DELETE /{id}` - Xóa user (Admin only)
 
-### 👑 Admin - Dashboard (`/api/Admin`)
-- `GET /dashboard` - Thống kê tổng quan
-- `GET /ratings` - Lấy tất cả đánh giá
-- `DELETE /ratings/{id}` - Xóa đánh giá
-- `GET /comments` - Lấy tất cả bình luận
-- `DELETE /comments/{id}` - Xóa bình luận
+### 👑 Admin - Ratings Management (`/api/Rating`)
+- `GET /` - Lấy tất cả đánh giá (Admin only)
+  - Bao gồm: userName, movieName, starRating, review, createdAt
+- `DELETE /{id}` - Xóa đánh giá (Admin only)
 
-### 👑 Admin - Genre (`/api/Admin/Genre`)
-- `POST /` - Tạo thể loại
-- `PUT /{id}` - Cập nhật thể loại
-- `DELETE /{id}` - Xóa thể loại
+### 👑 Admin - Comments Management (`/api/Comment`)
+- `GET /` - Lấy tất cả bình luận (Admin only)
+  - Bao gồm: userName, movieName, content, createdAt
+- `DELETE /{id}` - Xóa bình luận (Admin only)
 
 ## 🔧 Các Service chính
 
-- **MovieService**: Quản lý phim, tìm kiếm, thống kê lượt xem
-- **AuthService**: Xác thực, đăng ký, đăng nhập, JWT token
-- **RatingService**: Quản lý đánh giá, tính điểm trung bình
-- **CommentService**: Quản lý bình luận
-- **FavoriteService**: Quản lý phim yêu thích
-- **GenreService**: Quản lý thể loại
-- **CloudinaryService**: Upload/Delete poster lên Cloudinary
+### Application Layer Services
+
+#### MovieService (IMovieService)
+- Quản lý CRUD phim
+- Tìm kiếm và phân trang
+- Upload/Update poster qua Cloudinary
+- Soft delete movies
+
+#### AuthService (IAuthService)
+- Đăng ký user mới
+- Xác thực login (username/password)
+- Tạo JWT token với role claims
+- Password hashing với BCrypt
+
+#### AdminService (IAdminService)
+- Lấy thống kê dashboard (users, movies, ratings, comments count)
+- Top 5 phim xem nhiều nhất / đánh giá cao nhất
+- Quản lý users: CRUD, update role
+- Quản lý ratings/comments: Get all, Delete
+
+#### RatingService (IRatingService)
+- Tạo/Cập nhật/Xóa đánh giá
+- Lấy đánh giá theo phim/user
+- Tính điểm trung bình phim
+- Kiểm tra user đã đánh giá chưa
+
+#### CommentService (ICommentService)
+- Tạo/Cập nhật/Xóa bình luận
+- Lấy bình luận theo phim/user
+- Kiểm tra ownership (user chỉ sửa/xóa comment của mình)
+
+#### FavoriteService (IFavoriteService)
+- Thêm/Xóa phim yêu thích
+- Lấy danh sách favorite của user
+- Kiểm tra phim đã favorite chưa
+
+#### GenreService (IGenreService)
+- Quản lý thể loại phim
+- CRUD genres
+
+#### CloudinaryService
+- Upload poster lên Cloudinary
+- Delete poster từ Cloudinary
+- Trả về URL poster
 
 ## 🛡️ Security Features
 
-- **JWT Authentication**: Bảo mật API endpoints
-- **Role-based Authorization**: Phân quyền Admin/User
-- **Password Hashing**: Mã hóa mật khẩu
-- **CORS Policy**: Chỉ cho phép truy cập từ frontend (localhost:3000)
-- **Soft Delete**: Xóa mềm dữ liệu quan trọng
+### Authentication & Authorization
+- **JWT Bearer Token**: Xác thực với token trong header `Authorization: Bearer {token}`
+- **Role-based Authorization**: 
+  - `[Authorize(Roles = "Admin")]` - Chỉ Admin
+  - `[Authorize(Roles = "User")]` - User thông thường
+- **Password Hashing**: BCrypt để mã hóa mật khẩu
+- **Token Claims**: UserId, Username, Role được embed trong JWT
+
+### CORS Configuration
+```csharp
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowReactApp", policy => {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials(); // Cho phép credentials
+    });
+});
+```
+
+### Data Protection
+- **Soft Delete**: Movies có trường `IsDeleted` thay vì xóa vật lý
+- **Owner Validation**: User chỉ sửa/xóa comment/rating của mình
+- **Input Validation**: DTOs với Data Annotations
 
 ## 📝 Migrations
 
@@ -229,9 +293,53 @@ dotnet publish -c Release -o ./publish
 
 ### Chạy trên IIS:
 1. Publish project
-2. Tạo Application Pool trong IIS
+2. Tạo Application Pool trong IIS (.NET CLR Version: No Managed Code)
 3. Point đến thư mục publish
-4. Cấu hình connection string production
+4. Cấu hình connection string production trong `appsettings.Production.json`
+5. Cài đặt ASP.NET Core Hosting Bundle
+
+### Environment Variables Production:
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Production SQL Server Connection String"
+  },
+  "Jwt": {
+    "Key": "Production Secret Key (min 32 chars)",
+    "Issuer": "MovieWebApp",
+    "Audience": "MovieWebApp"
+  },
+  "CloudinarySettings": {
+    "CloudName": "production-cloud",
+    "ApiKey": "production-key",
+    "ApiSecret": "production-secret"
+  }
+}
+```
+
+## 🔧 Troubleshooting
+
+### Lỗi CORS
+- Đảm bảo `app.UseCors("AllowReactApp")` đặt trước `app.UseAuthorization()`
+- Kiểm tra origin trong CORS policy khớp với frontend URL
+- Frontend phải gửi `credentials: 'include'` trong fetch requests
+
+### Lỗi 401 Unauthorized
+- Kiểm tra JWT token hợp lệ và chưa hết hạn
+- Xác nhận header `Authorization: Bearer {token}` được gửi đúng
+- Kiểm tra role trong token khớp với `[Authorize(Roles="...")]`
+
+### Lỗi Database Migration
+```bash
+# Drop database và migrate lại
+dotnet ef database drop
+dotnet ef database update
+```
+
+### Cloudinary Upload Error
+- Kiểm tra API credentials trong `appsettings.json`
+- Xác nhận file size không vượt quá giới hạn
+- Kiểm tra file format (jpg, png, webp)
 
 ## 📖 Tài liệu tham khảo
 
@@ -252,20 +360,36 @@ This project is licensed under the MIT License.
 
 ## 🎯 Features Highlights
 
-✅ Clean Architecture  
-✅ JWT Authentication  
-✅ Role-based Authorization  
-✅ RESTful API Design  
-✅ Entity Framework Core  
-✅ Swagger Documentation  
-✅ Cloudinary Integration  
-✅ CRUD Operations  
-✅ Search & Filter  
-✅ Rating & Comment System  
-✅ Favorite Movies  
-✅ Admin Dashboard  
-✅ Soft Delete  
+### Architecture & Design
+✅ **Clean Architecture** (Domain → Application → Infrastructure → Presentation)  
+✅ **Repository Pattern** với Generic Repository  
+✅ **Dependency Injection** toàn bộ services  
+✅ **RESTful API Design** chuẩn HTTP methods  
 
-## 📞 Support
+### Authentication & Security
+✅ **JWT Bearer Authentication** với role claims  
+✅ **Role-based Authorization** (Admin/User)  
+✅ **Password Hashing** với BCrypt  
+✅ **CORS Configuration** với credentials support  
 
-Nếu có vấn đề, vui lòng tạo issue trên GitHub repository.
+### Core Features
+✅ **Movie Management**: CRUD với upload poster Cloudinary  
+✅ **Search & Pagination**: Tìm kiếm và phân trang movies  
+✅ **Rating System**: 1-5 stars với review text  
+✅ **Comment System**: Bình luận và thảo luận  
+✅ **Favorite System**: Lưu phim yêu thích  
+✅ **Genre Management**: Quản lý thể loại phim  
+
+### Admin Features
+✅ **Dashboard Statistics**: Tổng quan users, movies, ratings, comments  
+✅ **Top Movies**: Top 5 xem nhiều & đánh giá cao  
+✅ **User Management**: CRUD users, phân quyền  
+✅ **Content Moderation**: Quản lý ratings/comments  
+
+### Technical Features
+✅ **Entity Framework Core 9.0** với Code-First Migrations  
+✅ **Swagger/OpenAPI Documentation** với JWT support  
+✅ **Cloudinary Integration** cho cloud storage  
+✅ **Soft Delete Pattern** cho data protection  
+✅ **Logging** với ILogger interface  
+

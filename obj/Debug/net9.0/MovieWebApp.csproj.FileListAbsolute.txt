@@ -227,7 +227,6 @@ C:\ASP.NET\MovieWebApp\MovieWebApp\obj\Debug\net9.0\staticwebassets.build.json
 C:\ASP.NET\MovieWebApp\MovieWebApp\obj\Debug\net9.0\staticwebassets.build.json.cache
 C:\ASP.NET\MovieWebApp\MovieWebApp\obj\Debug\net9.0\staticwebassets.development.json
 C:\ASP.NET\MovieWebApp\MovieWebApp\obj\Debug\net9.0\staticwebassets.build.endpoints.json
-C:\ASP.NET\MovieWebApp\MovieWebApp\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 C:\ASP.NET\MovieWebApp\MovieWebApp\obj\Debug\net9.0\MovieWeb.C351BF9B.Up2Date
 C:\ASP.NET\MovieWebApp\MovieWebApp\obj\Debug\net9.0\MovieWebApp.dll
 C:\ASP.NET\MovieWebApp\MovieWebApp\obj\Debug\net9.0\refint\MovieWebApp.dll
@@ -238,3 +237,4 @@ C:\ASP.NET\MovieWebApp\MovieWebApp\bin\Debug\net9.0\CloudinaryDotNet.dll
 C:\ASP.NET\MovieWebApp\MovieWebApp\bin\Debug\net9.0\Newtonsoft.Json.dll
 C:\ASP.NET\MovieWebApp\MovieWebApp\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\ASP.NET\MovieWebApp\MovieWebApp\obj\Debug\net9.0\MovieWebApp.sourcelink.json
+C:\ASP.NET\MovieWebApp\MovieWebApp\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt

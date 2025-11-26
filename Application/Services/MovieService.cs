@@ -79,7 +79,7 @@ namespace MovieWebApp.Application.Services
             });
         }
 
-        public async Task<Movie> CreateMovieWithFilesAsync(MovieUploadRequest request)
+        public async Task<Movie> CreateMovieWithFilesAsync(MovieCreateRequest request)
         {
             try
             {
@@ -135,7 +135,7 @@ namespace MovieWebApp.Application.Services
             }
         }
 
-        public async Task<Movie?> UpdateMovieWithFilesAsync(int id, MovieUploadRequest request)
+        public async Task<Movie?> UpdateMovieWithFilesAsync(int id, MovieUpdateRequest request)
         {
             var movie = await _movieRepository.GetByIdAsync(id);
             if (movie == null)
