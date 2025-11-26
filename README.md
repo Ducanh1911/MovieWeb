@@ -393,3 +393,6 @@ This project is licensed under the MIT License.
 ✅ **Soft Delete Pattern** cho data protection  
 ✅ **Logging** với ILogger interface  
 
+## 📞 Support
+
+Nếu có vấn đề, vui lòng tạo issue trên GitHub repository.
