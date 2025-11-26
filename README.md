@@ -1,4 +1,4 @@
-# 🎬 MovieWebApp - Backend API
+# 🎬 MovieWeb - Backend API
 
 ## 📋 Giới thiệu
 
@@ -269,3 +269,4 @@ This project is licensed under the MIT License.
 ## 📞 Support
 
 Nếu có vấn đề, vui lòng tạo issue trên GitHub repository.
+
