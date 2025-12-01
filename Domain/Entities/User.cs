@@ -24,5 +24,8 @@ namespace MovieWebApp.Domain.Entities
         // Quan hệ với Rating và Comment
         public virtual ICollection<Rating> Ratings { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
+        
+        // Quan hệ với RefreshToken
+        public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
     }
 }

@@ -10,8 +10,9 @@ namespace MovieWebApp.Application.Interfaces
         Task<AuthResponseDto> LoginAsync(LoginDto model);
         Task<bool> ChangePasswordAsync(int Userid,ChangePasswordDto dto);
         Task<User> GetByIdAsync(int id);
-
-
+        Task<AuthResponseDto> RefreshTokenAsync(string token, string? ipAddress = null);
+        Task RevokeTokenAsync(string token, string? ipAddress = null);
+        Task RevokeAllUserTokensAsync(int userId, string? ipAddress = null);
     }
    
 }

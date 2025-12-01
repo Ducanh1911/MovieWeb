@@ -4,6 +4,7 @@ using MovieWebApp.Application.DTOs.Auth;
 using MovieWebApp.Application.Interfaces;
 using MovieWebApp.Domain.Entities;
 using MovieWebApp.Domain.Interfaces;
+using MovieWebApp.Domain.Repositories;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -13,16 +14,21 @@ using Microsoft.Extensions.Logging;
 public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IConfiguration _configuration;
     private readonly ILogger<AuthService> _logger;
 
-    public AuthService(IUserRepository userRepository, IConfiguration configuration, ILogger<AuthService> logger)
+    public AuthService(
+        IUserRepository userRepository,
+        IRefreshTokenRepository refreshTokenRepository,
+        IConfiguration configuration,
+        ILogger<AuthService> logger)
     {
         _userRepository = userRepository;
+        _refreshTokenRepository = refreshTokenRepository;
         _configuration = configuration;
         _logger = logger;
     }
-
 
     public async Task<User> GetByIdAsync(int id)
     {
@@ -35,6 +41,7 @@ public class AuthService : IAuthService
 
         return user;
     }
+
     public async Task<AuthResponseDto> RegisterAsync(RegisterDto model)
     {
         _logger.LogInformation("Đăng ký user mới với email: {Email}", model.Email);
@@ -70,14 +77,30 @@ public class AuthService : IAuthService
         await _userRepository.AddAsync(user);
         _logger.LogInformation("Tạo user thành công: userId = {UserId}", user.UserId);
 
-        var token = GenerateJwtToken(user);
+        // Generate tokens
+        var accessToken = GenerateJwtToken(user);
+        var refreshToken = GenerateRefreshToken();
+
+        // Lưu refresh token vào DB
+        var refreshTokenEntity = new RefreshToken
+        {
+            UserId = user.UserId,
+            Token = refreshToken,
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
+            CreatedAt = DateTime.UtcNow
+        };
+        await _refreshTokenRepository.AddAsync(refreshTokenEntity);
+
         return new AuthResponseDto
         {
-            Token = token,
-            Expiration = DateTime.UtcNow.AddHours(1),
+            AccessToken = accessToken,
+            RefreshToken = refreshToken,
+            AccessTokenExpiration = DateTime.UtcNow.AddHours(1),
+            RefreshTokenExpiration = DateTime.UtcNow.AddDays(7),
             UserId = user.UserId,
             Email = user.Email,
-            Role = user.Role
+            Role = user.Role,
+            Username = user.UserName
         };
     }
 
@@ -94,16 +117,115 @@ public class AuthService : IAuthService
 
         _logger.LogInformation("Đăng nhập thành công: userId = {UserId}", user.UserId);
 
-        var token = GenerateJwtToken(user);
+        // Generate tokens
+        var accessToken = GenerateJwtToken(user);
+        var refreshToken = GenerateRefreshToken();
+
+        // Lưu refresh token vào DB
+        var refreshTokenEntity = new RefreshToken
+        {
+            UserId = user.UserId,
+            Token = refreshToken,
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
+            CreatedAt = DateTime.UtcNow
+        };
+        await _refreshTokenRepository.AddAsync(refreshTokenEntity);
+
         return new AuthResponseDto
         {
-            Token = token,
-            Expiration = DateTime.UtcNow.AddHours(1),
+            AccessToken = accessToken,
+            RefreshToken = refreshToken,
+            AccessTokenExpiration = DateTime.UtcNow.AddHours(1),
+            RefreshTokenExpiration = DateTime.UtcNow.AddDays(7),
             UserId = user.UserId,
             Email = user.Email,
             Role = user.Role,
             Username = user.UserName
         };
+    }
+
+    public async Task<AuthResponseDto> RefreshTokenAsync(string token, string? ipAddress = null)
+    {
+        var refreshToken = await _refreshTokenRepository.GetByTokenAsync(token);
+
+        if (refreshToken == null)
+        {
+            _logger.LogWarning("Refresh token không tồn tại");
+            throw new UnauthorizedAccessException("Refresh token không hợp lệ");
+        }
+
+        if (!refreshToken.IsActive)
+        {
+            _logger.LogWarning("Refresh token đã hết hạn hoặc bị thu hồi. UserId: {UserId}", refreshToken.UserId);
+
+            if (refreshToken.IsRevoked)
+            {
+                _logger.LogError("Phát hiện refresh token đã được sử dụng! Revoke tất cả tokens của user {UserId}", refreshToken.UserId);
+                await RevokeAllUserTokensAsync(refreshToken.UserId, ipAddress);
+            }
+
+            throw new UnauthorizedAccessException("Refresh token đã hết hạn");
+        }
+
+        var user = refreshToken.User;
+
+        // Revoke token cũ
+        refreshToken.IsRevoked = true;
+        refreshToken.RevokedAt = DateTime.UtcNow;
+        refreshToken.RevokedByIp = ipAddress;
+        await _refreshTokenRepository.UpdateAsync(refreshToken);
+
+        // Generate tokens mới
+        var newAccessToken = GenerateJwtToken(user);
+        var newRefreshToken = GenerateRefreshToken();
+
+        // Lưu refresh token mới
+        var newRefreshTokenEntity = new RefreshToken
+        {
+            UserId = user.UserId,
+            Token = newRefreshToken,
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
+            CreatedAt = DateTime.UtcNow,
+            CreatedByIp = ipAddress
+        };
+        await _refreshTokenRepository.AddAsync(newRefreshTokenEntity);
+
+        _logger.LogInformation("Refresh token thành công cho userId {UserId}", user.UserId);
+
+        return new AuthResponseDto
+        {
+            AccessToken = newAccessToken,
+            RefreshToken = newRefreshToken,
+            AccessTokenExpiration = DateTime.UtcNow.AddHours(1),
+            RefreshTokenExpiration = DateTime.UtcNow.AddDays(7),
+            UserId = user.UserId,
+            Email = user.Email,
+            Role = user.Role,
+            Username = user.UserName
+        };
+    }
+
+    public async Task RevokeTokenAsync(string token, string? ipAddress = null)
+    {
+        var refreshToken = await _refreshTokenRepository.GetByTokenAsync(token);
+
+        if (refreshToken == null || !refreshToken.IsActive)
+        {
+            throw new UnauthorizedAccessException("Refresh token không hợp lệ");
+        }
+
+        refreshToken.IsRevoked = true;
+        refreshToken.RevokedAt = DateTime.UtcNow;
+        refreshToken.RevokedByIp = ipAddress;
+        await _refreshTokenRepository.UpdateAsync(refreshToken);
+
+        _logger.LogInformation("Revoke token thành công cho userId {UserId}", refreshToken.UserId);
+    }
+
+    public async Task RevokeAllUserTokensAsync(int userId, string? ipAddress = null)
+    {
+        await _refreshTokenRepository.RevokeAllUserTokensAsync(userId, ipAddress);
+        _logger.LogInformation("Revoke tất cả tokens của userId {UserId}", userId);
     }
 
     public async Task<bool> ChangePasswordAsync(int userId, ChangePasswordDto dto)
@@ -135,6 +257,7 @@ public class AuthService : IAuthService
         _logger.LogInformation("Đổi mật khẩu thành công cho userId {UserId}", userId);
         return true;
     }
+
     private string HashPassword(string password)
     {
         using var sha256 = SHA256.Create();
@@ -146,6 +269,14 @@ public class AuthService : IAuthService
     private bool VerifyPassword(string password, string storedHash)
     {
         return HashPassword(password) == storedHash;
+    }
+
+    private string GenerateRefreshToken()
+    {
+        var randomBytes = new byte[64];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomBytes);
+        return Convert.ToBase64String(randomBytes);
     }
 
     private string GenerateJwtToken(User user)
@@ -165,7 +296,6 @@ public class AuthService : IAuthService
             new Claim(ClaimTypes.Role, user.Role ?? "User"),
             new Claim("userId", user.UserId.ToString()),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]!));

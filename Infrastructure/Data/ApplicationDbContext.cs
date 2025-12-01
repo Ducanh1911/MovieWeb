@@ -18,5 +18,6 @@ namespace MovieWebApp.Infrastructure.Data
         public DbSet<Favorite> favorites { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
     }
 }

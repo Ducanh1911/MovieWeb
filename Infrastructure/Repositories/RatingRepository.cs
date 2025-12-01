@@ -2,41 +2,20 @@ using Microsoft.EntityFrameworkCore;
 using MovieWebApp.Domain.Entities;
 using MovieWebApp.Domain.Interfaces;
 using MovieWebApp.Infrastructure.Data;
+using MovieWebApp.Infrastructure.SeedWorks;
 
 namespace MovieWebApp.Infrastructure.Repositories
 {
-    public class RatingRepository : IRatingRepository
+    public class RatingRepository : RepositoryBase<Rating, int> ,IRatingRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public RatingRepository(ApplicationDbContext context)
+        public RatingRepository(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }
 
-        public async Task<Rating> CreateAsync(Rating rating)
-        {
-            _context.Ratings.Add(rating);
-            await _context.SaveChangesAsync();
-            return rating;
-        }
-
-        public async Task<Rating> UpdateAsync(Rating rating)
-        {
-            _context.Ratings.Update(rating);
-            await _context.SaveChangesAsync();
-            return rating;
-        }
-
-        public async Task<bool> DeleteAsync(int ratingId)
-        {
-            var rating = await _context.Ratings.FindAsync(ratingId);
-            if (rating == null) return false;
-
-            _context.Ratings.Remove(rating);
-            await _context.SaveChangesAsync();
-            return true;
-        }
+        
 
         public async Task<Rating> GetByIdAsync(int ratingId)
         {

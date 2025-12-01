@@ -111,4 +111,70 @@ public class AuthController : ControllerBase
             return StatusCode(500, new { message = "Có lỗi xảy ra khi đổi mật khẩu" });
         }
     }
+
+    [HttpPost("refresh")]
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDto request)
+    {
+        try
+        {
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            var response = await _authService.RefreshTokenAsync(request.RefreshToken, ipAddress);
+            return Ok(response);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            _logger.LogWarning(ex, "Refresh token thất bại");
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Lỗi khi refresh token");
+            return StatusCode(500, new { message = "Lỗi server", detail = ex.Message });
+        }
+    }
+
+    [HttpPost("revoke")]
+    [Authorize]
+    public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenRequestDto request)
+    {
+        try
+        {
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            await _authService.RevokeTokenAsync(request.RefreshToken, ipAddress);
+            return Ok(new { message = "Token đã được thu hồi" });
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Lỗi khi revoke token");
+            return StatusCode(500, new { message = "Lỗi server" });
+        }
+    }
+
+    [HttpPost("logout-all")]
+    [Authorize]
+    public async Task<IActionResult> LogoutAll()
+    {
+        try
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                              ?? User.FindFirst("userId")?.Value;
+
+            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+                return Unauthorized("Token không hợp lệ");
+
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            await _authService.RevokeAllUserTokensAsync(userId, ipAddress);
+            
+            return Ok(new { message = "Đã đăng xuất khỏi tất cả thiết bị" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Lỗi khi logout all");
+            return StatusCode(500, new { message = "Lỗi server" });
+        }
+    }
 }
