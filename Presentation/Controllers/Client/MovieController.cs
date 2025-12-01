@@ -30,11 +30,11 @@ namespace MovieWebApp.Presentation.Controllers.Client
         }
 
         [HttpGet("paged")]
-        public async Task<IActionResult> GetPaged([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetPaged([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string search = "", [FromQuery] string genre = "")
         {
             try
             {
-                var (movies, totalCount) = await _movieService.GetPagedMoviesAsync(pageNumber, pageSize);
+                var (movies, totalCount) = await _movieService.GetPagedMoviesAsync(pageNumber, pageSize, search, genre);
 
                 var response = new
                 {

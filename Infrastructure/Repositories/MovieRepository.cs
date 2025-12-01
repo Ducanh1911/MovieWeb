@@ -36,7 +36,7 @@ namespace MovieWebApp.Infrastructure.Repositories
                 .FirstOrDefaultAsync(m => m.MovieId == id);
         }
 
-   
+
 
         public async Task<IEnumerable<Movie>> SearchByNameAsync(string keyword)
         {
@@ -49,11 +49,23 @@ namespace MovieWebApp.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<(IEnumerable<Movie> Movies, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize)
+        public async Task<(IEnumerable<Movie> Movies, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize, string search = "", string genre = "")
         {
             var query = _context.movies
                 .Include(m => m.Genres)
                 .Where(m => m.IsDeleted == false);
+
+            // Apply search filter
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                query = query.Where(m => m.MovieName.Contains(search));
+            }
+
+            // Apply genre filter
+            if (!string.IsNullOrWhiteSpace(genre))
+            {
+                query = query.Where(m => m.Genres.Any(g => g.Name == genre));
+            }
 
             var totalCount = await query.CountAsync();
 

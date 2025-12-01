@@ -9,7 +9,7 @@ namespace MovieWebApp.Domain.Interfaces
         Task<IEnumerable<Movie>> GetMovieAdminAsync();
         Task<Movie> GetByIdAsync(int id);
         Task<IEnumerable<Movie>> SearchByNameAsync(string keyword);
-        Task<(IEnumerable<Movie> Movies, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize);
+        Task<(IEnumerable<Movie> Movies, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize, string search = "", string genre = "");
 
     }
 }

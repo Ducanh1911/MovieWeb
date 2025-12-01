@@ -10,7 +10,7 @@ namespace MovieWebApp.Application.Interfaces
         Task<bool> DeleteMovieAsync(int id);
         Task<IEnumerable<Movie>> GetAllMoviesClientAsync();
         Task<IEnumerable<Movie>> GetAllMoviesAdminAsync();
-        Task<(IEnumerable<Movie> Movies, int TotalCount)> GetPagedMoviesAsync(int pageNumber, int pageSize);
+        Task<(IEnumerable<Movie> Movies, int TotalCount)> GetPagedMoviesAsync(int pageNumber, int pageSize, string search = "", string genre = "");
         Task<Movie?> GetMovieByIdAsync(int id);
         Task<IEnumerable<MovieDto>> SearchMoviesAsync(string keyword);
     }

@@ -47,13 +47,13 @@ namespace MovieWebApp.Application.Services
             return movies;
         }
 
-        public async Task<(IEnumerable<Movie> Movies, int TotalCount)> GetPagedMoviesAsync(int pageNumber, int pageSize)
+        public async Task<(IEnumerable<Movie> Movies, int TotalCount)> GetPagedMoviesAsync(int pageNumber, int pageSize, string search = "", string genre = "")
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 10;
             if (pageSize > 100) pageSize = 100;
 
-            return await _movieRepository.GetPagedAsync(pageNumber, pageSize);
+            return await _movieRepository.GetPagedAsync(pageNumber, pageSize, search, genre);
         }
 
         public async Task<Movie?> GetMovieByIdAsync(int id)

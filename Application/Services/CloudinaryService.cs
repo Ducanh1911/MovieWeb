@@ -23,6 +23,7 @@ namespace MovieWebApp.Application.Services
             if (file == null || file.Length == 0)
                 throw new ArgumentException("File ảnh không hợp lệ");
 
+            // Validate image file
             var allowedImageTypes = new[] { "image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp" };
             if (!allowedImageTypes.Contains(file.ContentType.ToLower()))
                 throw new ArgumentException("Chỉ chấp nhận file ảnh (jpg, png, gif, webp)");
@@ -52,10 +53,12 @@ namespace MovieWebApp.Application.Services
             if (file == null || file.Length == 0)
                 throw new ArgumentException("File video không hợp lệ");
 
+            // Validate video file
             var allowedVideoTypes = new[] { "video/mp4", "video/mpeg", "video/quicktime", "video/x-msvideo", "video/webm" };
             if (!allowedVideoTypes.Contains(file.ContentType.ToLower()))
                 throw new ArgumentException("Chỉ chấp nhận file video (mp4, mpeg, mov, avi, webm)");
 
+            // Giới hạn size video (500MB)
             const long maxVideoSize = 500 * 1024 * 1024;
             if (file.Length > maxVideoSize)
                 throw new ArgumentException("File video không được vượt quá 500MB");
