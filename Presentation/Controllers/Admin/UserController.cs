@@ -5,7 +5,7 @@ using MovieWebApp.Application.Interfaces;
 
 namespace MovieWebApp.Presentation.Controllers.Admin
 {
-    [Route("api/[controller]")]
+    [Route("api/admin/users")]
     [ApiController]
     [Authorize(Roles = "Admin")]
     public class UserController : ControllerBase

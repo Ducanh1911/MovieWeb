@@ -357,7 +357,7 @@
         }
       }
     },
-    "/api/Comment": {
+    "/api/admin/comments": {
       "get": {
         "tags": [
           "Comment"
@@ -369,7 +369,7 @@
         }
       }
     },
-    "/api/Comment/{commentId}": {
+    "/api/admin/comments/{commentId}": {
       "delete": {
         "tags": [
           "Comment"
@@ -392,7 +392,7 @@
         }
       }
     },
-    "/api/Dashboard/stats": {
+    "/api/admin/dashboard/stats": {
       "get": {
         "tags": [
           "Dashboard"
@@ -1114,7 +1114,7 @@
         }
       }
     },
-    "/api/Rating": {
+    "/api/admin/ratings": {
       "get": {
         "tags": [
           "Rating"
@@ -1126,7 +1126,7 @@
         }
       }
     },
-    "/api/Rating/{ratingId}": {
+    "/api/admin/ratings/{ratingId}": {
       "delete": {
         "tags": [
           "Rating"
@@ -1149,7 +1149,7 @@
         }
       }
     },
-    "/api/User": {
+    "/api/admin/users": {
       "get": {
         "tags": [
           "User"
@@ -1161,7 +1161,7 @@
         }
       }
     },
-    "/api/User/{userId}": {
+    "/api/admin/users/{userId}": {
       "get": {
         "tags": [
           "User"
@@ -1205,7 +1205,7 @@
         }
       }
     },
-    "/api/User/{userId}/role": {
+    "/api/admin/users/{userId}/role": {
       "put": {
         "tags": [
           "User"

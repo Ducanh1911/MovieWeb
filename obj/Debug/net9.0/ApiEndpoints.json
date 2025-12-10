@@ -1,5 +1,41 @@
 [
   {
+    "ContainingType": "MovieWebApp.Presentation.Controllers.Admin.CommentController",
+    "Method": "GetAllComments",
+    "RelativePath": "api/admin/comments",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MovieWebApp.Presentation.Controllers.Admin.CommentController",
+    "Method": "DeleteComment",
+    "RelativePath": "api/admin/comments/{commentId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "commentId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MovieWebApp.Presentation.Controllers.Admin.DashboardController",
+    "Method": "GetDashboardStats",
+    "RelativePath": "api/admin/dashboard/stats",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MovieWebApp.Presentation.Controllers.Admin.GenreController",
     "Method": "CreateGenre",
     "RelativePath": "api/admin/genres",
@@ -165,6 +201,95 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "MovieWebApp.Presentation.Controllers.Admin.RatingController",
+    "Method": "GetAllRatings",
+    "RelativePath": "api/admin/ratings",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MovieWebApp.Presentation.Controllers.Admin.RatingController",
+    "Method": "DeleteRating",
+    "RelativePath": "api/admin/ratings/{ratingId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ratingId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MovieWebApp.Presentation.Controllers.Admin.UserController",
+    "Method": "GetAllUsers",
+    "RelativePath": "api/admin/users",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MovieWebApp.Presentation.Controllers.Admin.UserController",
+    "Method": "GetUserById",
+    "RelativePath": "api/admin/users/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MovieWebApp.Presentation.Controllers.Admin.UserController",
+    "Method": "DeleteUser",
+    "RelativePath": "api/admin/users/{userId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MovieWebApp.Presentation.Controllers.Admin.UserController",
+    "Method": "UpdateUserRole",
+    "RelativePath": "api/admin/users/{userId}/role",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "MovieWebApp.Application.DTOs.UpdateUserRoleDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "AuthController",
     "Method": "GetById",
     "RelativePath": "api/Auth/{id}",
@@ -271,32 +396,6 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "MovieWebApp.Presentation.Controllers.Admin.CommentController",
-    "Method": "GetAllComments",
-    "RelativePath": "api/Comment",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MovieWebApp.Presentation.Controllers.Admin.CommentController",
-    "Method": "DeleteComment",
-    "RelativePath": "api/Comment/{commentId}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "commentId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
     "ContainingType": "MovieWebApp.Presentation.Controllers.Client.CommentController",
     "Method": "CreateComment",
     "RelativePath": "api/comments",
@@ -395,16 +494,6 @@
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MovieWebApp.Presentation.Controllers.Admin.DashboardController",
-    "Method": "GetDashboardStats",
-    "RelativePath": "api/Dashboard/stats",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -559,32 +648,6 @@
     ]
   },
   {
-    "ContainingType": "MovieWebApp.Presentation.Controllers.Admin.RatingController",
-    "Method": "GetAllRatings",
-    "RelativePath": "api/Rating",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MovieWebApp.Presentation.Controllers.Admin.RatingController",
-    "Method": "DeleteRating",
-    "RelativePath": "api/Rating/{ratingId}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "ratingId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
     "ContainingType": "MovieWebApp.Presentation.Controllers.Client.RatingController",
     "Method": "CreateRating",
     "RelativePath": "api/ratings",
@@ -712,69 +775,6 @@
       {
         "Name": "userId",
         "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MovieWebApp.Presentation.Controllers.Admin.UserController",
-    "Method": "GetAllUsers",
-    "RelativePath": "api/User",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MovieWebApp.Presentation.Controllers.Admin.UserController",
-    "Method": "GetUserById",
-    "RelativePath": "api/User/{userId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MovieWebApp.Presentation.Controllers.Admin.UserController",
-    "Method": "DeleteUser",
-    "RelativePath": "api/User/{userId}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MovieWebApp.Presentation.Controllers.Admin.UserController",
-    "Method": "UpdateUserRole",
-    "RelativePath": "api/User/{userId}/role",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "dto",
-        "Type": "MovieWebApp.Application.DTOs.UpdateUserRoleDto",
         "IsRequired": true
       }
     ],

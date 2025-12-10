@@ -47,7 +47,7 @@ public class AuthController : ControllerBase
         {
             var response = await _authService.RegisterAsync(model);
             _logger.LogInformation("Đăng ký thành công cho userId {UserId}", response.UserId);
-            return Ok(response);
+            return Ok(new {message = "Đăng nhập thành công"});
         }
         catch (Exception ex)
         {

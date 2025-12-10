@@ -30,8 +30,8 @@ namespace MovieWebApp.Application.Services
             {
                 Name = genredto.Name,
             };
-            genre.Name = "hanh dong";
-            Console.WriteLine(genre.Name);
+            //genre.Name = "hanh dong";
+            //Console.WriteLine(genre.Name);
             return await _genreRepository.AddAsync(genre);
         }
 

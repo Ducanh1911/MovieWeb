@@ -4,7 +4,7 @@ using MovieWebApp.Application.Interfaces;
 
 namespace MovieWebApp.Presentation.Controllers.Admin
 {
-    [Route("api/[controller]")]
+    [Route("api/admin/ratings")]
     [ApiController]
     [Authorize(Roles = "Admin")]
     public class RatingController : ControllerBase
